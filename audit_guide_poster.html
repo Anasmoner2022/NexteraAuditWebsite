@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f0ece4;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .poster {
+    width: 720px;
+    background: #faf8f4;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #1a1a2e;
+    padding: 40px 44px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .tag {
+    display: inline-block;
+    background: #e8f5e4;
+    color: #2d7a3a;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    color: #ffffff;
+    font-size: 38px;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .header h1 em {
+    color: #f0c060;
+    font-style: italic;
+  }
+  .header p {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.5;
+    max-width: 420px;
+  }
+
+  /* ── BODY ── */
+  .body {
+    padding: 36px 44px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 20px;
+  }
+
+  /* Steps */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    border: 1px solid #ede9e0;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    background: #1a1a2e;
+    color: #f0c060;
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-content strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 3px;
+  }
+  .step-content span {
+    font-size: 12.5px;
+    color: #777;
+    line-height: 1.45;
+  }
+  .step-content .fail-tag {
+    display: inline-block;
+    background: #fff0f0;
+    color: #c0392b;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-top: 5px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: #ede9e0;
+    margin: 28px 0;
+  }
+
+  /* Rules row */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .rule-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #ede9e0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .rule-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .rule-card p {
+    font-size: 12.5px;
+    color: #444;
+    line-height: 1.45;
+  }
+  .rule-card p strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 2px;
+  }
+
+  /* Fail section */
+  .fail-section {
+    background: #fff8f0;
+    border: 1.5px solid #f5d5a0;
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 28px;
+  }
+  .fail-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .fail-header span {
+    font-size: 20px;
+  }
+  .fail-header strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: #b45309;
+  }
+  .fail-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fail-list li {
+    font-size: 12.5px;
+    color: #78350f;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.45;
+  }
+  .fail-list li::before {
+    content: '×';
+    position: absolute;
+    left: 0;
+    color: #d97706;
+    font-weight: 700;
+  }
+
+  /* ALERT BANNER */
+  .alert-banner {
+    background: #1a1a2e;
+    border-radius: 16px;
+    padding: 22px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .alert-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .alert-text h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: #f0c060;
+    margin-bottom: 6px;
+  }
+  .alert-text p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.55;
+  }
+  .alert-text p strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 20px 44px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-size: 12px;
+    color: #bbb;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .footer-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #f0c060;
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="tag">01edu · Peer Learning</div>
+    <h1>How to Run an<br><em>Effective Audit</em></h1>
+    <p>Audits are not just evaluations — they are your best chance to grow as both a developer and a collaborator.</p>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="section-title">Step-by-step process</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Schedule enough time</strong>
+          <span>Allow time for real discussion, not a quick check. Rushed audits help no one.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>All team members must be present</strong>
+          <span>Every auditee must attend in person.</span>
+          <div class="fail-tag">→ Missing member = Immediate fail</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Read the subject first</strong>
+          <span>The auditor must understand the project brief before asking any questions.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>Question each member — before touching the code</strong>
+          <span>Ask about the project goal, algorithms, technologies used, and each person's individual contribution.</span>
+          <div class="fail-tag">→ Can't explain their part = Fail</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <strong>Open files & verify the code matches explanations</strong>
+          <span>The project files must reflect exactly what was described.</span>
+          <div class="fail-tag">→ Mismatch = Fail</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <strong>Run the project & test each requirement</strong>
+          <span>Follow the audit file questions. Results are binary: ✓ or ✗. One failed test = failed project.</span>
+          <div class="fail-tag">→ One "No" = Project fails</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <strong>Run the bonus questions last</strong>
+          <span>Only after all core questions pass. Bonus points are earned, not given.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">Golden rules</div>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-icon">🤝</div>
+        <p><strong>Respect always</strong>Both sides maintain professional respect throughout.</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🎯</div>
+        <p><strong>Stay on topic</strong>Questions must relate to the project only.</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🚫</div>
+        <p><strong>No indulgence</strong>Being too lenient hurts everyone's growth.</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🆘</div>
+        <p><strong>Escalate if needed</strong>Stop and call staff if conflict arises.</p>
+      </div>
+    </div>
+
+    <div class="fail-section">
+      <div class="fail-header">
+        <span>⚠️</span>
+        <strong>An audit automatically fails when…</strong>
+      </div>
+      <ul class="fail-list">
+        <li>Not all auditees are physically present</li>
+        <li>Any member cannot explain the project objective</li>
+        <li>Any member cannot explain the algorithms or tech choices</li>
+        <li>Any member cannot explain their own code contribution</li>
+        <li>Any single test in the audit file returns an unexpected output</li>
+      </ul>
+    </div>
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner">
+      <div class="alert-icon">📢</div>
+      <div class="alert-text">
+        <h3>Important Notice</h3>
+        <p>The <strong>last audit will be conducted offline</strong> with our <strong>technical team</strong> — not between peers. Make sure every team member truly understands the project, the code, and their individual contribution. <strong>There are no shortcuts.</strong></p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-brand">01edu · Peer-to-Peer Audits</span>
+    <div class="footer-dot"></div>
+  </div>
+
+</div>
+</body>
+</html>
