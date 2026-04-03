@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Buddy System — 01Edu Cairo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080b;--surf:#0d0f14;--surf2:#121520;--surf3:#181c28;
+  --border:#1e2336;--border2:#282f45;
+  --text:#c2c8d8;--muted:#4e566e;--white:#eceef5;
+  --accent:#4af0c4;--accent2:#a8ffea;
+  --amber:#f5c842;--red:#ff6b6b;--blue:#5ba3ff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1;}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0 0;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.topbar .brand{color:var(--white);font-weight:700;font-size:11px;display:flex;align-items:center;gap:8px;}
+.topbar .brand em{color:var(--accent);font-style:normal;}
+.month-badge{background:rgba(74,240,196,.08);border:1px solid rgba(74,240,196,.2);color:var(--accent);padding:4px 12px;border-radius:4px;font-size:10px;font-weight:700;}
+
+/* HERO */
+.hero{padding:52px 0 44px;border-bottom:1px solid var(--border);}
+.hero-eye{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-eye::before{content:'';width:28px;height:1px;background:var(--accent);}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:400;line-height:1.08;color:var(--white);margin-bottom:16px;}
+h1 i{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:14px;color:var(--muted);max-width:580px;line-height:1.8;}
+.hero-sub strong{color:var(--text);}
+
+/* STATS ROW */
+.stats{display:flex;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:28px;max-width:460px;}
+.stat{flex:1;padding:14px 18px;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat .sv{font-family:'Instrument Serif',serif;font-size:26px;font-weight:400;color:var(--white);line-height:1;}
+.stat .sl{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:3px;}
+
+/* SECTION */
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin:52px 0 20px;display:flex;align-items:center;gap:12px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* RESPONSIBILITIES BANNER */
+.resp-banner{background:var(--surf);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:20px 24px;margin-bottom:32px;}
+.resp-banner .rb-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin-bottom:10px;}
+.resp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:4px;}
+.resp-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);padding:4px 0;}
+.resp-item::before{content:'✓';font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);flex-shrink:0;margin-top:2px;}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:24px;}
+.search-wrap input{
+  width:100%;background:var(--surf);border:1px solid var(--border);
+  border-radius:8px;padding:12px 16px 12px 42px;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--white);
+  outline:none;transition:border-color .2s;
+}
+.search-wrap input::placeholder{color:var(--muted);}
+.search-wrap input:focus{border-color:rgba(74,240,196,.35);}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none;}
+
+/* PAIR CARDS */
+#pairs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;}
+
+.pair-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:border-color .25s,box-shadow .25s;
+  position:relative;
+}
+.pair-card:hover{border-color:rgba(74,240,196,.25);box-shadow:0 8px 32px rgba(0,0,0,.4);}
+
+/* pair number stripe top-left */
+.pair-num{
+  position:absolute;top:14px;left:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  font-weight:700;color:var(--muted);letter-spacing:.08em;
+}
+
+.pair-inner{padding:20px 20px 20px 20px;}
+
+.students-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-top:6px;}
+
+.student-chip{
+  flex:1;background:var(--surf2);border:1px solid var(--border);
+  border-radius:8px;padding:12px 14px;
+  transition:border-color .2s;
+}
+.student-chip.highlighted{border-color:rgba(74,240,196,.4);background:rgba(74,240,196,.05);}
+.sc-role{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;}
+.sc-name{font-size:15px;font-weight:600;color:var(--white);line-height:1.2;}
+.sc-tag{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px;}
+
+.pair-connector{
+  display:flex;align-items:center;justify-content:center;
+  width:28px;flex-shrink:0;
+}
+.connector-icon{font-size:16px;color:var(--accent);opacity:.7;}
+
+/* pair responsibilities row */
+.pair-tasks{display:flex;gap:6px;flex-wrap:wrap;}
+.task-tag{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  padding:3px 8px;border-radius:4px;
+  background:rgba(74,240,196,.07);color:var(--accent);
+  border:1px solid rgba(74,240,196,.15);
+}
+
+/* FOUND / EMPTY STATE */
+.empty-state{
+  text-align:center;padding:60px 20px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--muted);letter-spacing:.08em;
+}
+
+/* CHECKPOINT REMINDER */
+.reminder{
+  background:rgba(245,200,66,.04);border:1px solid rgba(245,200,66,.15);
+  border-left:3px solid var(--amber);border-radius:10px;
+  padding:18px 22px;margin-top:32px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.reminder .r-icon{font-size:18px;flex-shrink:0;}
+.reminder .r-text{font-size:13px;color:var(--text);line-height:1.7;}
+.reminder .r-text strong{color:var(--amber);}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);margin-top:64px;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);}
+footer .hl{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">🐹 <em>01Edu</em> Cairo · Buddy System</div>
+  <div class="month-badge" id="month-badge">Loading...</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eye">Monthly Pairings</div>
+  <h1>Who is your<br><i>buddy this month?</i></h1>
+  <p class="hero-sub">
+    Find your pair below. Your buddy reviews your checkpoint before you submit,
+    and you review theirs. <strong>This is not optional — it is the system.</strong>
+    Pairs rotate every month so you build relationships with everyone.
+  </p>
+  <div class="stats">
+    <div class="stat"><div class="sv" id="stat-pairs">—</div><div class="sl">Pairs</div></div>
+    <div class="stat"><div class="sv" id="stat-students">—</div><div class="sl">Students</div></div>
+    <div class="stat"><div class="sv">2</div><div class="sl">Checkpoints</div></div>
+    <div class="stat"><div class="sv">Fri</div><div class="sl">Deadline</div></div>
+  </div>
+</section>
+
+<!-- RESPONSIBILITIES -->
+<div class="sec-label">Your Buddy Responsibilities</div>
+<div class="resp-banner">
+  <div class="rb-label">🤝 What you owe your buddy this month</div>
+  <div class="resp-grid">
+    <div class="resp-item">Review their Checkpoint 1 before Friday Week 2</div>
+    <div class="resp-item">Review their Checkpoint 2 before Friday Week 4</div>
+    <div class="resp-item">Leave at least 2 written comments on each checkpoint</div>
+    <div class="resp-item">Attend Wednesday online meetup together</div>
+    <div class="resp-item">If you can't attend online, send them a written summary</div>
+    <div class="resp-item">Be their first call when they're stuck — not the answer, the direction</div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="sec-label">This Month's Pairs</div>
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input type="text" id="search" placeholder="Search your name..." oninput="filterPairs()" autocomplete="off"/>
+</div>
+
+<!-- PAIRS GRID -->
+<div id="pairs-grid"></div>
+<div class="empty-state" id="empty-state" style="display:none;">No student found matching "<span id="search-term"></span>"</div>
+
+<!-- CHECKPOINT REMINDER -->
+<div class="reminder">
+  <div class="r-icon">📌</div>
+  <div class="r-text">
+    <strong>Checkpoint deadlines this month:</strong>
+    Checkpoint 1 closes <strong id="cp1-date">Friday, Week 2</strong> at end of the online meetup.
+    Checkpoint 2 closes <strong id="cp2-date">Friday, Week 4</strong> at end of the online meetup.
+    Your buddy's review must be submitted <em>before</em> yours — no review, no submission.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>🐹 <span class="hl">01Edu Cairo</span> · Buddy System · <span id="footer-month">—</span></div>
+  <div>Pairs rotate every Month Day 1</div>
+</footer>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  ✏️  INSTRUCTOR: EDIT ONLY THIS SECTION EACH MONTH
+// ════════════════════════════════════════════════════════════
+
+const CONFIG = {
+  month: "April 2026",          // ← Change this each month
+  cp1Deadline: "Friday 11 Apr", // ← Checkpoint 1 deadline
+  cp2Deadline: "Friday 25 Apr", // ← Checkpoint 2 deadline
+};
+
+// Add or remove pairs as needed.
+// Each pair is: { a: "Name", b: "Name" }
+// You can also add an optional note: { a: "...", b: "...", note: "..." }
+const PAIRS = [
+  { a: "Ahmed Hassan",      b: "Mohamed Ali"       },
+  { a: "Sara Ibrahim",      b: "Youssef Khalil"    },
+  { a: "Omar Fathy",        b: "Nour El-Din"       },
+  { a: "Rana Mostafa",      b: "Karim Adel"        },
+  { a: "Tarek Samir",       b: "Mona Ragab"        },
+  { a: "Layla Ashraf",      b: "Amr Gamal"         },
+  { a: "Hassan Mahmoud",    b: "Dina Nasser"       },
+  { a: "Salma Wael",        b: "Ibrahim Sayed"     },
+  { a: "Mahmoud Yousry",    b: "Nada Sherif"       },
+  { a: "Student Name A",    b: "Student Name B",
+    note: "placeholder pair — replace with real names" },
+];
+
+// ════════════════════════════════════════════════════════════
+//  DO NOT EDIT BELOW THIS LINE
+// ════════════════════════════════════════════════════════════
+
+// Inject config
+document.getElementById('month-badge').textContent = CONFIG.month;
+document.getElementById('footer-month').textContent = CONFIG.month;
+document.getElementById('cp1-date').textContent = CONFIG.cp1Deadline;
+document.getElementById('cp2-date').textContent = CONFIG.cp2Deadline;
+document.getElementById('stat-pairs').textContent = PAIRS.length;
+document.getElementById('stat-students').textContent = PAIRS.length * 2;
+document.title = `Buddy System — ${CONFIG.month} — 01Edu Cairo`;
+
+// Render pair cards
+function renderPairs(pairs) {
+  const grid = document.getElementById('pairs-grid');
+  const empty = document.getElementById('empty-state');
+
+  if (pairs.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.innerHTML = pairs.map((pair, i) => {
+    const originalIdx = PAIRS.indexOf(pair) + 1;
+    const isPlaceholder = pair.note;
+    return `
+    <div class="pair-card" style="${isPlaceholder ? 'opacity:.55;' : ''}">
+      <div class="pair-num">PAIR ${String(originalIdx).padStart(2, '0')}</div>
+      <div class="pair-inner">
+        <div class="students-row">
+          <div class="student-chip">
+            <div class="sc-role">Student A</div>
+            <div class="sc-name">${pair.a}</div>
+          </div>
+          <div class="pair-connector"><div class="connector-icon">⇄</div></div>
+          <div class="student-chip">
+            <div class="sc-role">Student B</div>
+            <div class="sc-name">${pair.b}</div>
+          </div>
+        </div>
+        <div class="pair-tasks">
+          <span class="task-tag">Review checkpoint 1</span>
+          <span class="task-tag">Review checkpoint 2</span>
+          <span class="task-tag">Wed online meetup</span>
+          ${isPlaceholder ? `<span class="task-tag" style="color:var(--amber);border-color:rgba(245,200,66,.2);background:rgba(245,200,66,.07);">⚠ ${pair.note}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Search / filter
+function filterPairs() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  document.getElementById('search-term').textContent = q;
+
+  if (!q) {
+    // Remove any highlights
+    document.querySelectorAll('.student-chip').forEach(c => c.classList.remove('highlighted'));
+    renderPairs(PAIRS);
+    return;
+  }
+
+  const matched = PAIRS.filter(p =>
+    p.a.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)
+  );
+  renderPairs(matched);
+
+  // Highlight matching name
+  setTimeout(() => {
+    document.querySelectorAll('.student-chip').forEach(chip => {
+      const name = chip.querySelector('.sc-name').textContent.toLowerCase();
+      if (name.includes(q)) chip.classList.add('highlighted');
+    });
+  }, 0);
+}
+
+// Initial render
+renderPairs(PAIRS);
+</script>
+</body>
+</html>

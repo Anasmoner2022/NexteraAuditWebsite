@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Monthly Competition — 01Edu Cairo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080b;--surf:#0d0f14;--surf2:#121520;--surf3:#181c28;
+  --border:#1e2336;--border2:#282f45;
+  --text:#c2c8d8;--muted:#4e566e;--white:#eceef5;
+  --comp:#ff6b6b;--comp2:#ffaaaa;
+  --accent:#4af0c4;--amber:#f5c842;--blue:#5ba3ff;--violet:#c87fff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1;}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0 0;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.topbar .brand{color:var(--white);font-weight:700;font-size:11px;display:flex;align-items:center;gap:8px;}
+.topbar .brand em{color:var(--comp);font-style:normal;}
+.month-badge{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);color:var(--comp);padding:4px 12px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.1em;}
+
+/* HERO */
+.hero{padding:52px 0 44px;border-bottom:1px solid var(--border);}
+.hero-eye{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--comp);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-eye::before{content:'';width:28px;height:1px;background:var(--comp);}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:400;line-height:1.08;color:var(--white);margin-bottom:16px;}
+h1 i{font-style:italic;color:var(--comp);}
+.hero-sub{font-size:14px;color:var(--muted);max-width:600px;line-height:1.8;}
+.hero-sub strong{color:var(--text);}
+
+/* CHALLENGE CARD */
+.challenge{
+  margin-top:28px;
+  background:var(--surf);border:1px solid var(--border);
+  border-left:3px solid var(--comp);border-radius:12px;
+  padding:24px 28px;
+  display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;
+}
+@media(max-width:600px){.challenge{grid-template-columns:1fr;}}
+.ch-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--comp);margin-bottom:6px;}
+.ch-title{font-family:'Instrument Serif',serif;font-size:22px;color:var(--white);line-height:1.2;margin-bottom:6px;}
+.ch-desc{font-size:13px;color:var(--muted);line-height:1.7;max-width:520px;}
+.ch-desc strong{color:var(--text);}
+.ch-meta{display:flex;flex-direction:column;gap:8px;align-items:flex-end;min-width:130px;}
+.ch-deadline{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  text-align:right;color:var(--muted);line-height:1.5;
+}
+.ch-deadline span{display:block;color:var(--amber);font-weight:700;font-size:11px;}
+
+/* STATS */
+.stats{display:flex;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:28px;max-width:520px;}
+.stat{flex:1;padding:14px 18px;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat .sv{font-family:'Instrument Serif',serif;font-size:26px;font-weight:400;color:var(--white);line-height:1;}
+.stat .sl{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:3px;}
+
+/* SECTION LABEL */
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin:52px 0 18px;display:flex;align-items:center;gap:12px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── RANDOMISER ── */
+.randomiser{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:14px;padding:28px 30px;margin-bottom:32px;
+}
+.rand-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+.rand-title{font-family:'Instrument Serif',serif;font-size:19px;color:var(--white);}
+.rand-title span{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);font-weight:400;margin-left:6px;}
+
+.rand-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+
+.size-select{
+  background:var(--surf2);border:1px solid var(--border2);
+  color:var(--white);font-family:'JetBrains Mono',monospace;
+  font-size:11px;padding:8px 12px;border-radius:6px;
+  cursor:pointer;outline:none;appearance:none;
+  letter-spacing:.06em;
+}
+.size-select:focus{border-color:rgba(255,107,107,.4);}
+
+.btn{
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:9px 18px;border-radius:6px;cursor:pointer;border:none;
+  transition:all .2s;
+}
+.btn-primary{
+  background:var(--comp);color:#1a0a0a;
+}
+.btn-primary:hover{background:var(--comp2);transform:translateY(-1px);}
+.btn-primary:active{transform:translateY(0);}
+.btn-secondary{
+  background:transparent;color:var(--muted);
+  border:1px solid var(--border2);
+}
+.btn-secondary:hover{color:var(--text);border-color:var(--border2);}
+
+/* student input pool */
+.pool-area{
+  background:var(--surf2);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;margin-bottom:16px;
+}
+.pool-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px;}
+.pool-tags{display:flex;flex-wrap:wrap;gap:6px;min-height:32px;}
+.pool-tag{
+  background:var(--surf3);border:1px solid var(--border2);
+  border-radius:5px;padding:4px 10px 4px 10px;
+  font-size:12.5px;color:var(--text);display:flex;align-items:center;gap:6px;
+}
+.pool-tag .remove{
+  cursor:pointer;color:var(--muted);font-size:13px;line-height:1;
+  background:none;border:none;padding:0;transition:color .15s;
+}
+.pool-tag .remove:hover{color:var(--comp);}
+.add-student-row{display:flex;gap:8px;margin-top:10px;}
+.add-input{
+  flex:1;background:var(--surf);border:1px solid var(--border);
+  border-radius:6px;padding:9px 13px;font-family:'DM Sans',sans-serif;
+  font-size:13.5px;color:var(--white);outline:none;transition:border-color .2s;
+}
+.add-input::placeholder{color:var(--muted);}
+.add-input:focus{border-color:rgba(255,107,107,.35);}
+
+/* ── TEAMS GRID ── */
+#teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+
+.team-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:border-color .25s,box-shadow .25s;
+}
+.team-card:hover{border-color:rgba(255,107,107,.25);box-shadow:0 8px 28px rgba(0,0,0,.4);}
+.team-stripe{height:3px;}
+.team-inner{padding:20px 22px;}
+.team-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.team-name{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+}
+.team-size{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--muted);
+}
+.team-members{display:flex;flex-direction:column;gap:7px;}
+.member{
+  background:var(--surf2);border:1px solid var(--border);
+  border-radius:6px;padding:9px 12px;
+  font-size:14px;color:var(--white);font-weight:500;
+  display:flex;align-items:center;gap:8px;
+}
+.member-num{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--muted);min-width:14px;
+}
+.captain-badge{
+  margin-left:auto;
+  font-family:'JetBrains Mono',monospace;font-size:8px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  background:rgba(245,200,66,.1);color:var(--amber);
+  border:1px solid rgba(245,200,66,.2);border-radius:3px;
+  padding:2px 6px;
+}
+
+/* stripes by team index */
+.stripe-0{background:var(--comp);}
+.stripe-1{background:var(--blue);}
+.stripe-2{background:var(--violet);}
+.stripe-3{background:var(--accent);}
+.stripe-4{background:var(--amber);}
+.stripe-5{background:#ff9d4d;}
+.stripe-6{background:#6dc96d;}
+.stripe-7{background:#4af0c4;}
+.stripe-8{background:var(--comp);}
+.stripe-9{background:var(--blue);}
+
+.name-0{color:var(--comp);}
+.name-1{color:var(--blue);}
+.name-2{color:var(--violet);}
+.name-3{color:var(--accent);}
+.name-4{color:var(--amber);}
+.name-5{color:#ff9d4d;}
+.name-6{color:#6dc96d;}
+.name-7{color:#4af0c4;}
+.name-8{color:var(--comp);}
+.name-9{color:var(--blue);}
+
+/* EMPTY / PLACEHOLDER */
+.empty-state{
+  grid-column:1/-1;
+  text-align:center;padding:52px 20px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--muted);letter-spacing:.06em;line-height:2;
+  border:1px dashed var(--border);border-radius:12px;
+}
+
+/* RULES REMINDER */
+.rules-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px;}
+.rule-item{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:8px;padding:14px 16px;
+  font-size:12.5px;color:var(--text);line-height:1.6;
+}
+.rule-item strong{color:var(--white);display:block;margin-bottom:2px;}
+.rule-item::before{content:attr(data-n);display:block;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--comp);font-weight:700;margin-bottom:6px;}
+
+/* JUDGING */
+.judging-bar{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-top:20px;}
+.jb-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:14px;}
+.criteria{display:flex;flex-direction:column;gap:10px;}
+.criterion{display:flex;align-items:center;gap:14px;}
+.cr-name{font-size:13px;color:var(--text);min-width:160px;}
+.cr-bar-wrap{flex:1;background:var(--surf2);border-radius:3px;height:6px;overflow:hidden;border:1px solid var(--border);}
+.cr-bar{height:100%;border-radius:3px;transition:width .6s ease;}
+.cr-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);min-width:34px;text-align:right;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);margin-top:64px;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);}
+footer .hl{color:var(--comp);}
+
+/* ANIMATION */
+@keyframes popIn{from{opacity:0;transform:scale(.95) translateY(6px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.team-card{animation:popIn .25s ease both;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">🐹 <em>01Edu</em> Cairo · Monthly Competition</div>
+  <div class="month-badge" id="month-badge">Loading...</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eye">Competition Teams</div>
+  <h1>This month's<br><i>challenge.</i></h1>
+  <p class="hero-sub">
+    Teams are drawn randomly. Build your project together.
+    <strong>Demo on the last Friday.</strong> Every member must be able to explain every line.
+  </p>
+
+  <!-- CHALLENGE -->
+  <div class="challenge">
+    <div>
+      <div class="ch-label">🏆 This Month's Theme</div>
+      <div class="ch-title" id="ch-title">Loading...</div>
+      <div class="ch-desc" id="ch-desc">Loading...</div>
+    </div>
+    <div class="ch-meta">
+      <div class="ch-deadline">
+        <span id="ch-deadline">—</span>
+        Submission deadline
+      </div>
+      <div class="ch-deadline" style="margin-top:4px;">
+        <span id="ch-presentation">—</span>
+        Presentation day
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="sv" id="stat-teams">—</div><div class="sl">Teams</div></div>
+    <div class="stat"><div class="sv" id="stat-students">—</div><div class="sl">Students</div></div>
+    <div class="stat"><div class="sv" id="stat-size">—</div><div class="sl">Per team</div></div>
+    <div class="stat"><div class="sv">4</div><div class="sl">Criteria</div></div>
+  </div>
+</section>
+
+<!-- RANDOMISER -->
+<div class="sec-label">Team Generator</div>
+<div class="randomiser">
+  <div class="rand-top">
+    <div class="rand-title">Random draw <span id="pool-count">0 students in pool</span></div>
+    <div class="rand-controls">
+      <select class="size-select" id="team-size">
+        <option value="2">Teams of 2</option>
+        <option value="3" selected>Teams of 3</option>
+        <option value="4">Teams of 4</option>
+      </select>
+      <button class="btn btn-secondary" onclick="clearTeams()">Clear</button>
+      <button class="btn btn-primary" onclick="generateTeams()">🎲 Draw Teams</button>
+    </div>
+  </div>
+
+  <div class="pool-area">
+    <div class="pool-label">Student pool — add all students, then draw</div>
+    <div class="pool-tags" id="pool-tags">
+      <!-- students appear here as tags -->
+    </div>
+    <div class="add-student-row">
+      <input type="text" class="add-input" id="add-input"
+        placeholder="Type a student name and press Enter..."
+        onkeydown="handleAddKey(event)"/>
+      <button class="btn btn-secondary" onclick="addStudent()">+ Add</button>
+      <button class="btn btn-secondary" onclick="loadDefault()">Load roster</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEAMS GRID -->
+<div class="sec-label">This Month's Teams <span id="regen-note" style="font-size:9px;color:var(--muted);font-weight:400;letter-spacing:.04em;margin-left:8px;"></span></div>
+<div id="teams-grid">
+  <div class="empty-state">
+    Add students above and click <strong style="color:var(--comp)">Draw Teams</strong><br>
+    to randomly generate this month's competition teams.
+  </div>
+</div>
+
+<!-- COMPETITION RULES -->
+<div class="sec-label">Rules</div>
+<div class="rules-row">
+  <div class="rule-item" data-n="RULE 01"><strong>Use Go</strong>The language of the curriculum — no exceptions.</div>
+  <div class="rule-item" data-n="RULE 02"><strong>All members present</strong>Every team member must speak on presentation day.</div>
+  <div class="rule-item" data-n="RULE 03"><strong>Demo first</strong>Show the working project before explaining how it works.</div>
+  <div class="rule-item" data-n="RULE 04"><strong>Defend everything</strong>Any team member may be asked about any part. Failing the defence = disqualified.</div>
+  <div class="rule-item" data-n="RULE 05"><strong>No tutorial code</strong>All code must be written during the month by the team.</div>
+  <div class="rule-item" data-n="RULE 06"><strong>Submit on time</strong>Wednesday before the last Friday — no late submissions.</div>
+</div>
+
+<!-- JUDGING -->
+<div class="judging-bar">
+  <div class="jb-label">Judging Criteria</div>
+  <div class="criteria">
+    <div class="criterion">
+      <div class="cr-name">Working demo</div>
+      <div class="cr-bar-wrap"><div class="cr-bar" style="width:40%;background:var(--comp);"></div></div>
+      <div class="cr-pct">40%</div>
+    </div>
+    <div class="criterion">
+      <div class="cr-name">Code quality</div>
+      <div class="cr-bar-wrap"><div class="cr-bar" style="width:30%;background:var(--blue);"></div></div>
+      <div class="cr-pct">30%</div>
+    </div>
+    <div class="criterion">
+      <div class="cr-name">Defence Q&amp;A</div>
+      <div class="cr-bar-wrap"><div class="cr-bar" style="width:20%;background:var(--violet);"></div></div>
+      <div class="cr-pct">20%</div>
+    </div>
+    <div class="criterion">
+      <div class="cr-name">Originality</div>
+      <div class="cr-bar-wrap"><div class="cr-bar" style="width:10%;background:var(--amber);"></div></div>
+      <div class="cr-pct">10%</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>🐹 <span class="hl">01Edu Cairo</span> · Monthly Competition · <span id="footer-month">—</span></div>
+  <div>Winner posted publicly within 24 hours</div>
+</footer>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  ✏️  INSTRUCTOR: EDIT THIS SECTION EACH MONTH
+// ════════════════════════════════════════════════════════════
+
+const CONFIG = {
+  month: "April 2026",
+  submissionDeadline: "Wed 22 Apr",
+  presentationDay:    "Fri 24 Apr",
+
+  challenge: {
+    title: "CLI Word Frequency Analyzer",
+    description:
+      "Build a command-line tool in Go that reads any text file and outputs " +
+      "the <strong>top 10 most frequent words</strong>, their count, and a " +
+      "simple bar chart — all in the terminal. No external libraries. " +
+      "Input from file path argument. Bonus: support multiple files at once.",
+  },
+
+  // Default student roster — shown when "Load roster" is clicked
+  // Replace with your actual student names each month
+  defaultRoster: [
+    "Ahmed Hassan",
+    "Mohamed Ali",
+    "Sara Ibrahim",
+    "Youssef Khalil",
+    "Omar Fathy",
+    "Nour El-Din",
+    "Rana Mostafa",
+    "Karim Adel",
+    "Tarek Samir",
+    "Mona Ragab",
+    "Layla Ashraf",
+    "Amr Gamal",
+    "Hassan Mahmoud",
+    "Dina Nasser",
+    "Salma Wael",
+    "Ibrahim Sayed",
+    "Mahmoud Yousry",
+    "Nada Sherif",
+  ],
+};
+
+// ════════════════════════════════════════════════════════════
+//  DO NOT EDIT BELOW THIS LINE
+// ════════════════════════════════════════════════════════════
+
+// Inject config
+document.getElementById('month-badge').textContent     = CONFIG.month;
+document.getElementById('footer-month').textContent    = CONFIG.month;
+document.getElementById('ch-title').textContent        = CONFIG.challenge.title;
+document.getElementById('ch-desc').innerHTML           = CONFIG.challenge.description;
+document.getElementById('ch-deadline').textContent     = CONFIG.submissionDeadline;
+document.getElementById('ch-presentation').textContent = CONFIG.presentationDay;
+document.title = `Competition — ${CONFIG.month} — 01Edu Cairo`;
+
+// Team names (fun Egyptian-themed team names)
+const TEAM_NAMES = [
+  "Team Giza", "Team Nile", "Team Sphinx", "Team Cairo",
+  "Team Luxor", "Team Sinai", "Team Delta", "Team Aswan",
+  "Team Karnak", "Team Nubia", "Team Alexandria", "Team Siwa",
+];
+
+// Student pool state
+let pool = [];
+
+function renderPool() {
+  const container = document.getElementById('pool-tags');
+  document.getElementById('pool-count').textContent =
+    pool.length === 0 ? '0 students in pool' :
+    pool.length === 1 ? '1 student in pool' :
+    `${pool.length} students in pool`;
+
+  container.innerHTML = pool.map((name, i) => `
+    <div class="pool-tag">
+      ${name}
+      <button class="remove" onclick="removeStudent(${i})" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+function addStudent() {
+  const input = document.getElementById('add-input');
+  const name = input.value.trim();
+  if (!name) return;
+  if (pool.includes(name)) { input.value = ''; return; }
+  pool.push(name);
+  input.value = '';
+  renderPool();
+}
+
+function handleAddKey(e) {
+  if (e.key === 'Enter') addStudent();
+}
+
+function removeStudent(i) {
+  pool.splice(i, 1);
+  renderPool();
+}
+
+function loadDefault() {
+  CONFIG.defaultRoster.forEach(name => {
+    if (!pool.includes(name)) pool.push(name);
+  });
+  renderPool();
+}
+
+// Fisher-Yates shuffle
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function generateTeams() {
+  if (pool.length < 2) {
+    alert('Add at least 2 students to the pool first.');
+    return;
+  }
+
+  const size = parseInt(document.getElementById('team-size').value);
+  const shuffled = shuffle(pool);
+  const teams = [];
+
+  for (let i = 0; i < shuffled.length; i += size) {
+    teams.push(shuffled.slice(i, i + size));
+  }
+
+  // If last team has only 1 person, merge with second-to-last
+  if (teams.length > 1 && teams[teams.length - 1].length === 1) {
+    const lone = teams.pop()[0];
+    teams[teams.length - 1].push(lone);
+  }
+
+  renderTeams(teams);
+
+  // Update stats
+  document.getElementById('stat-teams').textContent    = teams.length;
+  document.getElementById('stat-students').textContent = pool.length;
+  document.getElementById('stat-size').textContent     = size;
+  document.getElementById('regen-note').textContent    =
+    `— drawn ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
+}
+
+function renderTeams(teams) {
+  const grid = document.getElementById('teams-grid');
+
+  if (teams.length === 0) {
+    grid.innerHTML = `<div class="empty-state">No teams yet. Add students and click Draw Teams.</div>`;
+    return;
+  }
+
+  grid.innerHTML = teams.map((members, i) => {
+    const teamName = TEAM_NAMES[i % TEAM_NAMES.length];
+    const colorIdx = i % 10;
+    return `
+    <div class="team-card" style="animation-delay:${i * 0.05}s">
+      <div class="team-stripe stripe-${colorIdx}"></div>
+      <div class="team-inner">
+        <div class="team-header">
+          <div class="team-name name-${colorIdx}">${teamName}</div>
+          <div class="team-size">${members.length} members</div>
+        </div>
+        <div class="team-members">
+          ${members.map((name, mi) => `
+            <div class="member">
+              <span class="member-num">${mi + 1}</span>
+              ${name}
+              ${mi === 0 ? '<span class="captain-badge">Captain</span>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function clearTeams() {
+  document.getElementById('teams-grid').innerHTML =
+    `<div class="empty-state">Add students above and click <strong style="color:var(--comp)">Draw Teams</strong><br>to randomly generate this month's competition teams.</div>`;
+  document.getElementById('regen-note').textContent = '';
+  document.getElementById('stat-teams').textContent    = '—';
+  document.getElementById('stat-students').textContent = '—';
+  document.getElementById('stat-size').textContent     = '—';
+}
+
+// Init pool render
+renderPool();
+</script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Exam 03 — The Gopher's Duel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0a0f;--surface:#110e16;--surface2:#17131e;--border:#271e33;--accent:#c87fff;--accent2:#e8b8ff;--red:#ff5f5f;--teal:#4af0c4;--warn:#f7a330;--text:#ddd0ee;--muted:#6b5585;--code-bg:#080510;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:15px;line-height:1.7;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(200,127,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(200,127,255,.015) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1;}
+.series-nav{display:flex;align-items:center;gap:8px;padding:18px 0 0;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap;}
+.series-nav .sep{color:var(--border);}.series-nav .current{color:var(--accent);font-weight:700;}
+.exam-pills{margin-left:auto;display:flex;gap:4px;}
+.exam-pill{width:26px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;border:1px solid var(--border);color:var(--muted);background:var(--surface);}
+.exam-pill.done{background:rgba(74,240,196,.15);color:#4af0c4;border-color:rgba(74,240,196,.3);}
+.exam-pill.active{background:var(--accent);color:#0c0a0f;border-color:var(--accent);}
+.exam-pill.locked{opacity:.3;}
+header{padding:44px 0 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.header-glow{position:absolute;top:-60px;right:-80px;width:500px;height:400px;background:radial-gradient(ellipse,rgba(200,127,255,.07) 0%,transparent 65%);pointer-events:none;}
+.eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(200,127,255,.3);background:rgba(200,127,255,.07);padding:4px 12px;border-radius:4px;}
+.badge-sec{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);background:var(--surface);padding:4px 12px;border-radius:4px;}
+h1{font-size:clamp(2.1rem,5.5vw,3.4rem);font-weight:800;letter-spacing:-.025em;line-height:1.05;color:#fff;margin-bottom:14px;}
+h1 span{color:var(--accent);}
+.subtitle{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12.5px;max-width:580px;line-height:1.6;}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:30px;}
+.meta-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .2s;}
+.meta-item:hover{border-color:rgba(200,127,255,.25);}
+.meta-item .label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:5px;}
+.meta-item .value{font-weight:700;font-size:16px;color:var(--accent);}
+.meta-item .value.white{color:#fff;}.meta-item .value.teal{color:var(--teal);}.meta-item .value.warn{color:var(--warn);}
+.section-title{font-size:10.5px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin:52px 0 18px;display:flex;align-items:center;gap:14px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.objective-panel{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:26px 30px;}
+.objective-panel .obj-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin-bottom:10px;}
+.objective-panel p{color:var(--text);font-size:14px;line-height:1.75;}.objective-panel strong{color:#fff;}
+.insight-banner{background:rgba(200,127,255,.05);border:1px solid rgba(200,127,255,.2);border-radius:10px;padding:18px 22px;margin-top:12px;display:flex;align-items:flex-start;gap:14px;}
+.ib-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.ib-text{font-size:13.5px;color:var(--text);line-height:1.7;}.ib-text strong{color:var(--accent2);}
+.topics-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin-top:12px;}
+.tp-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:14px;}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;}
+.topic-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);padding:5px 0;}
+.topic-item::before{content:'▸';color:var(--accent);flex-shrink:0;margin-top:1px;}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px 26px;}
+.toc ol{list-style:none;columns:2;gap:4px;}
+.toc li{padding:7px 0;font-size:13.5px;display:flex;align-items:baseline;gap:10px;break-inside:avoid;}
+.toc-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);font-weight:700;min-width:24px;}
+.toc-name{color:var(--text);flex:1;}.toc-lc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;}
+@media(max-width:600px){.toc ol{columns:1;}}
+.progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:32px;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.ph-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);}
+.ph-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;}
+.progress-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s ease;}
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;transition:border-color .25s,box-shadow .25s;}
+.question-card:hover{border-color:rgba(200,127,255,.25);box-shadow:0 0 32px rgba(200,127,255,.04);}
+.card-header{display:flex;align-items:center;gap:14px;padding:18px 26px;border-bottom:1px solid transparent;background:var(--surface2);cursor:pointer;user-select:none;transition:background .2s;}
+.card-header:hover{background:rgba(200,127,255,.04);}.card-header.active{border-bottom-color:var(--border);}
+.q-number{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--muted);min-width:24px;}
+.q-title{font-size:16.5px;font-weight:700;color:#fff;flex:1;}
+.q-lc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
+.difficulty-badge{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:4px;}
+.diff-easy{background:rgba(74,240,196,.1);color:#4af0c4;border:1px solid rgba(74,240,196,.2);}
+.diff-medium{background:rgba(247,163,48,.1);color:#f7a330;border:1px solid rgba(247,163,48,.2);}
+.toggle-icon{font-size:11px;color:var(--muted);transition:transform .25s;}
+.card-header.active .toggle-icon{transform:rotate(90deg);}
+.card-body{padding:28px 32px;display:none;animation:fadeIn .2s ease;}.card-body.open{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.instructions{font-size:14px;line-height:1.8;color:var(--text);margin-bottom:22px;}
+.instructions strong{color:#fff;}
+.instructions ul{margin:10px 0 0;padding:0;list-style:none;}
+.instructions li{padding:4px 0 4px 22px;position:relative;}
+.instructions li::before{content:'—';position:absolute;left:0;color:var(--muted);}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin:22px 0 9px;}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:18px 20px;overflow-x:auto;position:relative;}
+pre::before{content:attr(data-lang);position:absolute;top:8px;right:12px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+code{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.65;color:var(--text);}
+p code,li code{background:rgba(200,127,255,.08);border:1px solid rgba(200,127,255,.15);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--accent2);font-family:'JetBrains Mono',monospace;}
+.kw{color:#7dd8ff;}.fn{color:#c87fff;}.ty{color:#e8b8ff;font-style:italic;}.str{color:#87e887;}.cm{color:#362448;font-style:italic;}.num{color:#f7c36a;}
+.console{background:#060408;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:14px 18px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;}
+.console .prompt{color:var(--accent);font-weight:700;}.console .out{color:#e8c8ff;}.console .cm{color:var(--muted);font-style:italic;}
+.constraints{background:rgba(200,127,255,.03);border:1px solid rgba(200,127,255,.12);border-radius:8px;padding:14px 18px;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);line-height:1.9;}
+.constraints .c-title{color:var(--accent);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;}
+.complexity{display:inline-flex;gap:16px;background:rgba(200,127,255,.05);border:1px solid rgba(200,127,255,.15);border-radius:6px;padding:8px 16px;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;}
+.cx-label{color:var(--muted);}.cx-val{color:var(--accent);font-weight:700;}
+.rules-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+.rules-col{border-radius:8px;padding:14px 16px;}
+.rules-col.allowed{background:rgba(200,127,255,.04);border:1px solid rgba(200,127,255,.18);}
+.rules-col.forbidden{background:rgba(255,95,95,.04);border:1px solid rgba(255,95,95,.18);}
+.rules-col .r-title{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.rules-col.allowed .r-title{color:var(--accent);}.rules-col.forbidden .r-title{color:var(--red);}
+.rules-col.allowed .r-title::before{content:'✓';font-size:12px;}.rules-col.forbidden .r-title::before{content:'✗';font-size:12px;}
+.rule-tag{display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 8px;border-radius:4px;margin:2px 2px 2px 0;line-height:1.5;}
+.rules-col.allowed .rule-tag{background:rgba(200,127,255,.1);color:#e8b8ff;border:1px solid rgba(200,127,255,.15);}
+.rules-col.forbidden .rule-tag{background:rgba(255,95,95,.1);color:#ffaaaa;border:1px solid rgba(255,95,95,.15);text-decoration:line-through;text-decoration-color:rgba(255,95,95,.4);}
+.rule-note{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.5;font-style:italic;}
+@media(max-width:560px){.rules-panel{grid-template-columns:1fr;}}
+.insight{background:rgba(200,127,255,.04);border:1px solid rgba(200,127,255,.15);border-left:3px solid var(--accent);border-radius:8px;padding:14px 18px;margin-top:18px;font-size:13px;color:var(--text);line-height:1.7;}
+.insight .i-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:6px;}
+footer{border-top:1px solid var(--border);margin-top:64px;padding-top:26px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+footer .f-series{color:var(--accent);font-weight:700;}
+footer .f-nav{display:flex;gap:16px;}
+footer .f-nav a{color:var(--muted);text-decoration:none;transition:color .2s;}footer .f-nav a:hover{color:var(--accent);}
+@media(max-width:600px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="series-nav">
+  <span>Gopher's Trial</span><span class="sep">›</span><span>Month 2</span><span class="sep">›</span>
+  <span class="current">Exam 03</span>
+  <div class="exam-pills">
+    <div class="exam-pill done">01</div><div class="exam-pill done">02</div>
+    <div class="exam-pill active">03</div>
+    <div class="exam-pill locked">04</div><div class="exam-pill locked">05</div>
+    <div class="exam-pill locked">06</div><div class="exam-pill locked">07</div>
+    <div class="exam-pill locked">08</div><div class="exam-pill locked">09</div>
+    <div class="exam-pill locked">10</div><div class="exam-pill locked">11</div>
+    <div class="exam-pill locked">12</div>
+  </div>
+</nav>
+
+<header>
+  <div class="header-glow"></div>
+  <div class="eyebrow">
+    <span class="badge">🐹 Month 2 · Exam 03</span>
+    <span class="badge-sec">Go Programming · Easy → Medium</span>
+  </div>
+  <h1>The Gopher's <span>Duel</span></h1>
+  <p class="subtitle">// Stacks, queues, and two-pointer — linear structures that think both ways at once.</p>
+  <div class="meta-grid">
+    <div class="meta-item"><div class="label">Questions</div><div class="value">10</div></div>
+    <div class="meta-item"><div class="label">Difficulty</div><div class="value warn">Easy→Medium</div></div>
+    <div class="meta-item"><div class="label">Language</div><div class="value white">Go</div></div>
+    <div class="meta-item"><div class="label">Month</div><div class="value white">2 of 6</div></div>
+    <div class="meta-item"><div class="label">Core Pattern</div><div class="value teal">Stack / 2-ptr</div></div>
+    <div class="meta-item"><div class="label">Tests</div><div class="value">Required</div></div>
+  </div>
+</header>
+
+<div class="section-title">Objective</div>
+<div class="objective-panel">
+  <div class="obj-label">🎯 What you will prove in this exam</div>
+  <p>Master the <strong>stack</strong> as a tool for remembering the past and matching it against the present — and the <strong>two-pointer</strong> as a tool for eliminating impossible pairs without brute force. These two ideas together solve a surprisingly large fraction of all interview problems.</p>
+</div>
+<div class="insight-banner" style="margin-top:12px;">
+  <div class="ib-icon">💡</div>
+  <div class="ib-text"><strong>The core insight:</strong> A stack is controlled memory — it remembers things in reverse order and lets you check "does what I see now match what I saw most recently?" The two-pointer eliminates the need to compare everything against everything.</div>
+</div>
+
+<div class="section-title">Prerequisites</div>
+<div class="topics-panel">
+  <div class="tp-label">📚 You must know these before attempting the exam</div>
+  <div class="topic-grid">
+    <div class="topic-item">Slice as stack: <code>append</code> = push, <code>s[:n-1]</code> = pop</div>
+    <div class="topic-item">Two-pointer advancing inward from both ends</div>
+    <div class="topic-item">Write-pointer for in-place compaction</div>
+    <div class="topic-item">Monotonic stack — concept and use cases</div>
+    <div class="topic-item">Queue FIFO vs Stack LIFO distinction</div>
+    <div class="topic-item">Amortised O(1) analysis concept</div>
+    <div class="topic-item">Reverse Polish Notation evaluation</div>
+    <div class="topic-item"><code>strconv.Atoi</code> for token parsing</div>
+  </div>
+</div>
+
+<div class="section-title">Contents</div>
+<div class="toc">
+  <ol>
+    <li><span class="toc-num">01</span><span class="toc-name">The Bracket Warden</span><span class="toc-lc">LC #20</span></li>
+    <li><span class="toc-num">02</span><span class="toc-name">The Memory Keeper</span><span class="toc-lc">LC #155</span></li>
+    <li><span class="toc-num">03</span><span class="toc-name">The Mirror Reader</span><span class="toc-lc">LC #125</span></li>
+    <li><span class="toc-num">04</span><span class="toc-name">The Vowel Swapper</span><span class="toc-lc">LC #345</span></li>
+    <li><span class="toc-num">05</span><span class="toc-name">The Zero Shepherd</span><span class="toc-lc">LC #283</span></li>
+    <li><span class="toc-num">06</span><span class="toc-name">The Water Trapper</span><span class="toc-lc">LC #11</span></li>
+    <li><span class="toc-num">07</span><span class="toc-name">The Backspace Judge</span><span class="toc-lc">LC #844</span></li>
+    <li><span class="toc-num">08</span><span class="toc-name">The Heat Watcher</span><span class="toc-lc">LC #739</span></li>
+    <li><span class="toc-num">09</span><span class="toc-name">The RPN Calculator</span><span class="toc-lc">LC #150</span></li>
+    <li><span class="toc-num">10</span><span class="toc-name">The Queue Architect</span><span class="toc-lc">LC #232</span></li>
+  </ol>
+</div>
+
+<div class="section-title">Your Progress</div>
+<div class="progress-wrap">
+  <div class="progress-header"><span class="ph-label">Questions opened</span><span class="ph-count" id="prog-count">0 / 10</span></div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<div class="section-title">Questions</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">01</span><span class="q-title">The Bracket Warden</span>
+    <span class="q-lc">LC #20</span><span class="difficulty-badge diff-easy">Easy</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Given a string of brackets, determine whether every opening bracket finds its matching close in the right order.</p>
+      <ul><li>Valid pairs: <code>()</code>, <code>[]</code>, <code>{}</code></li><li>Push on open, pop-and-compare on close — at the end the stack must be empty</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">IsValid</span>(s <span class="ty">string</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">IsValid</span>(<span class="str">"()"</span>))     <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsValid</span>(<span class="str">"()[]{}"</span>)) <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsValid</span>(<span class="str">"(]"</span>))     <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsValid</span>(<span class="str">"([)]"</span>))   <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsValid</span>(<span class="str">"{[]}"</span>))   <span class="cm">// true</span>
+}</code></pre>
+    <div class="console"><code><span class="prompt">$</span> go run .<br><span class="out">true</span><br><span class="out">true</span><br><span class="out">false</span><br><span class="out">false</span><br><span class="out">true</span></code></div>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; s.length &le; 10<sup>4</sup> &nbsp;|&nbsp; s consists of <code>()</code><code>[]</code><code>{}</code> only</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">[]byte (as stack)</span><span class="rule-tag">append()</span><span class="rule-tag">map[byte]byte</span><span class="rule-tag">range loop</span><div class="rule-note">// match map: ')'->'(' , ']'->'[' , '}'->'{' </div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">strings.Count</span><span class="rule-tag">strings.Replace</span><span class="rule-tag">regexp</span><span class="rule-tag">recursive calls</span><div class="rule-note">// No counting tricks — use a stack</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>A <code>map[byte]byte</code> stores all three closing→opening pairs. On a closing bracket: if stack empty or top &ne; match[ch], return false. At the end: return <code>len(stack) == 0</code>.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">02</span><span class="q-title">The Memory Keeper</span>
+    <span class="q-lc">LC #155</span><span class="difficulty-badge diff-medium">Medium</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Design a stack supporting <code>Push</code>, <code>Pop</code>, <code>Top</code>, and <code>GetMin</code> — all in <strong>O(1)</strong>.</p>
+      <ul><li>Use two parallel slices: one for values, one tracking the running minimum at each depth</li><li>On every Push: append <code>min(newVal, currentMin)</code> to the mins stack</li><li>Pop both stacks together on every Pop</li></ul>
+    </div>
+    <div class="section-label">Expected Type &amp; Functions</div>
+    <pre data-lang="go"><code><span class="kw">type</span> <span class="ty">MinStack</span> <span class="kw">struct</span> { <span class="cm">/* vals []int; mins []int */</span> }
+<span class="kw">func</span> <span class="fn">Constructor</span>() <span class="ty">MinStack</span>
+<span class="kw">func</span> (s *<span class="ty">MinStack</span>) <span class="fn">Push</span>(val <span class="ty">int</span>)
+<span class="kw">func</span> (s *<span class="ty">MinStack</span>) <span class="fn">Pop</span>()
+<span class="kw">func</span> (s *<span class="ty">MinStack</span>) <span class="fn">Top</span>() <span class="ty">int</span>
+<span class="kw">func</span> (s *<span class="ty">MinStack</span>) <span class="fn">GetMin</span>() <span class="ty">int</span></code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>-2<sup>31</sup> &le; val &le; 2<sup>31</sup>-1 &nbsp;|&nbsp; Pop/Top/GetMin called only on non-empty stack</div>
+    <div class="complexity"><span><span class="cx-label">All ops: </span><span class="cx-val">O(1)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">two []int slices</span><span class="rule-tag">append()</span><span class="rule-tag">slice shrink</span><div class="rule-note">// vals stack + mins stack — both move in sync</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">sort.Ints</span><span class="rule-tag">linear min scan</span><span class="rule-tag">map</span><div class="rule-note">// No O(n) min search — must be O(1)</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div><code>mins[i]</code> stores the minimum at depth i and below. Push: <code>append(mins, min(val, mins[top]))</code>. Pop: shrink both. <code>GetMin()</code> = <code>mins[top]</code> — always O(1).</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">03</span><span class="q-title">The Mirror Reader</span>
+    <span class="q-lc">LC #125</span><span class="difficulty-badge diff-easy">Easy</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Determine if a string is a palindrome considering only alphanumeric characters and ignoring case.</p>
+      <ul><li>Two pointers skip non-alphanumeric on both sides before comparing</li><li>Write inline <code>isAlnum</code> and <code>toLower</code> helpers — no library functions</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">IsPalindrome</span>(s <span class="ty">string</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">IsPalindrome</span>(<span class="str">"A man, a plan, a canal: Panama"</span>)) <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsPalindrome</span>(<span class="str">"race a car"</span>))                    <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsPalindrome</span>(<span class="str">" "</span>))                               <span class="cm">// true</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; s.length &le; 2&times;10<sup>5</sup></div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(1)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">two index pointers</span><span class="rule-tag">byte comparison</span><span class="rule-tag">inline helpers</span><div class="rule-note">// toLower: if 'A'&le;c&le;'Z' return c+32</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">strings.ToLower</span><span class="rule-tag">unicode package</span><span class="rule-tag">regexp</span><span class="rule-tag">new string copy</span><div class="rule-note">// O(1) space — no filtered copy</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Use two separate inner loops — one to advance left past non-alphanumeric, one for right. Do NOT combine them into a single complex condition. Separation makes the logic clear and avoids off-by-one bugs.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">04</span><span class="q-title">The Vowel Swapper</span>
+    <span class="q-lc">LC #345</span><span class="difficulty-badge diff-easy">Easy</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Reverse only the vowels (<code>aeiouAEIOU</code>) in string <code>s</code> — leave every other character exactly in place.</p>
+      <ul><li>Convert to <code>[]byte</code>, two pointers advancing inward</li><li>Advance each pointer past non-vowels, then swap</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">ReverseVowels</span>(s <span class="ty">string</span>) <span class="ty">string</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">ReverseVowels</span>(<span class="str">"hello"</span>))    <span class="cm">// holle</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">ReverseVowels</span>(<span class="str">"leetcode"</span>)) <span class="cm">// leotcede</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">ReverseVowels</span>(<span class="str">"aeiou"</span>))    <span class="cm">// uoiea</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; s.length &le; 3&times;10<sup>5</sup></div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">[]byte conversion</span><span class="rule-tag">two pointers</span><span class="rule-tag">isVowel helper</span><div class="rule-note">// Same skeleton as palindrome — but swap instead of compare</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">strings.Map</span><span class="rule-tag">regexp</span><span class="rule-tag">strings.IndexAny</span><div class="rule-note">// Traverse manually — two pointers only</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Same two-pointer skeleton as palindrome — but instead of comparing, you swap. Advance inner loops past non-vowels. After swapping, both pointers step inward and the outer loop continues.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">05</span><span class="q-title">The Zero Shepherd</span>
+    <span class="q-lc">LC #283</span><span class="difficulty-badge diff-easy">Easy</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Move all <code>0</code>s to the end of the slice in-place, preserving relative order of non-zero elements.</p>
+      <ul><li>Write-pointer: write every non-zero to position <code>write</code>, advance <code>write</code></li><li>After the loop, fill <code>nums[write:]</code> with zeros</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">MoveZeroes</span>(nums []<span class="ty">int</span>) {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    nums := []<span class="ty">int</span>{<span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>, <span class="num">3</span>, <span class="num">12</span>}
+    <span class="fn">MoveZeroes</span>(nums)
+    fmt.<span class="fn">Println</span>(nums) <span class="cm">// [1 3 12 0 0]</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; nums.length &le; 10<sup>4</sup></div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(1)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">write pointer</span><span class="rule-tag">for loop</span><span class="rule-tag">index assignment</span><div class="rule-note">// Write non-zeros forward, fill tail with 0</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">new slice</span><span class="rule-tag">append()</span><span class="rule-tag">sort package</span><span class="rule-tag">extra O(n) space</span><div class="rule-note">// Pure in-place — O(1) extra memory only</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Same write-pointer pattern as Exam 01 RemoveElement — but instead of returning k, fill the tail with zeros. The pattern: filter forward, fill remainder.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">06</span><span class="q-title">The Water Trapper</span>
+    <span class="q-lc">LC #11</span><span class="difficulty-badge diff-medium">Medium</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Find two vertical lines forming a container that holds the most water. Area = min(h[left], h[right]) &times; (right &minus; left).</p>
+      <ul><li>Two-pointer: always move the <strong>shorter</strong> wall inward</li><li>Moving the taller wall cannot improve the area — it can only reduce it</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">MaxArea</span>(height []<span class="ty">int</span>) <span class="ty">int</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">MaxArea</span>([]<span class="ty">int</span>{<span class="num">1</span>,<span class="num">8</span>,<span class="num">6</span>,<span class="num">2</span>,<span class="num">5</span>,<span class="num">4</span>,<span class="num">8</span>,<span class="num">3</span>,<span class="num">7</span>})) <span class="cm">// 49</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">MaxArea</span>([]<span class="ty">int</span>{<span class="num">1</span>,<span class="num">1</span>}))                <span class="cm">// 1</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>2 &le; height.length &le; 10<sup>5</sup> &nbsp;|&nbsp; 0 &le; height[i] &le; 10<sup>4</sup></div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(1)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">left/right pointers</span><span class="rule-tag">comparison operators</span><span class="rule-tag">running max var</span><div class="rule-note">// if h[left] &lt; h[right]: left++ else right--</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">nested O(n²) loops</span><span class="rule-tag">sort package</span><span class="rule-tag">extra array</span><div class="rule-note">// Brute force is O(n²) — two pointers must be O(n)</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Area is limited by the shorter side. Moving the taller wall inward keeps the same height limit but reduces width — strictly worse. Moving the shorter wall is the only move with any chance of improvement.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">07</span><span class="q-title">The Backspace Judge</span>
+    <span class="q-lc">LC #844</span><span class="difficulty-badge diff-easy">Easy</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Given two strings where <code>'#'</code> means backspace, return <code>true</code> if both produce the same result after processing.</p>
+      <ul><li>Simulate each string with a <code>[]byte</code> stack: append normal chars, pop on <code>'#'</code></li><li>A <code>'#'</code> on an empty stack is ignored</li><li>Compare the two resulting strings</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">BackspaceCompare</span>(s <span class="ty">string</span>, t <span class="ty">string</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">BackspaceCompare</span>(<span class="str">"ab#c"</span>, <span class="str">"ad#c"</span>)) <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">BackspaceCompare</span>(<span class="str">"ab##"</span>, <span class="str">"c#d#"</span>)) <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">BackspaceCompare</span>(<span class="str">"a#c"</span>,  <span class="str">"b"</span>))    <span class="cm">// false</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; s.length, t.length &le; 200</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n+m)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n+m)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">[]byte stack</span><span class="rule-tag">helper function</span><span class="rule-tag">string comparison</span><div class="rule-note">// process(s) helper → return process(s) == process(t)</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">strings.Replace</span><span class="rule-tag">regexp</span><span class="rule-tag">strings.Count</span><div class="rule-note">// Simulate character by character — no string tricks</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Write a <code>process(s string) string</code> helper. The solution body becomes one line: <code>return process(s) == process(t)</code>. Helpers make stack problems trivial.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">08</span><span class="q-title">The Heat Watcher</span>
+    <span class="q-lc">LC #739</span><span class="difficulty-badge diff-medium">Medium</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>For each day, return how many days until a warmer temperature. Return <code>0</code> if no warmer day exists.</p>
+      <ul><li>Use a monotonic decreasing stack of <em>indices</em></li><li>When <code>temp[i] &gt; temp[stack.top]</code>: pop index j, set <code>result[j] = i - j</code></li><li>Keep popping while the condition holds, then push i</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">DailyTemperatures</span>(temperatures []<span class="ty">int</span>) []<span class="ty">int</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">DailyTemperatures</span>([]<span class="ty">int</span>{<span class="num">73</span>,<span class="num">74</span>,<span class="num">75</span>,<span class="num">71</span>,<span class="num">69</span>,<span class="num">72</span>,<span class="num">76</span>,<span class="num">73</span>}))
+    <span class="cm">// [1 1 4 2 1 1 0 0]</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; temperatures.length &le; 10<sup>5</sup> &nbsp;|&nbsp; 30 &le; temperatures[i] &le; 100</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">[]int index stack</span><span class="rule-tag">append()</span><span class="rule-tag">result []int</span><div class="rule-note">// Stack stores indices — not temperatures</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">nested O(n²) loops</span><span class="rule-tag">sort package</span><span class="rule-tag">extra map</span><div class="rule-note">// O(n) via monotonic stack — no brute force</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Store indices in the stack. When a warmer day arrives at index i, pop index j and record <code>result[j] = i - j</code>. Indices remaining in the stack when the loop ends already have 0 from initialisation.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">09</span><span class="q-title">The RPN Calculator</span>
+    <span class="q-lc">LC #150</span><span class="difficulty-badge diff-medium">Medium</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Evaluate an expression in <strong>Reverse Polish Notation</strong>. Tokens are integers or <code>"+"</code>, <code>"-"</code>, <code>"*"</code>, <code>"/"</code>. Division truncates toward zero.</p>
+      <ul><li>Push numbers onto a stack</li><li>On an operator: pop two operands, apply, push result</li><li>Pop b first, then a — apply <code>a op b</code> (order matters for subtraction and division)</li></ul>
+    </div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">EvalRPN</span>(tokens []<span class="ty">string</span>) <span class="ty">int</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">EvalRPN</span>([]<span class="ty">string</span>{<span class="str">"2"</span>,<span class="str">"1"</span>,<span class="str">"+"</span>,<span class="str">"3"</span>,<span class="str">"*"</span>}))  <span class="cm">// 9</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">EvalRPN</span>([]<span class="ty">string</span>{<span class="str">"4"</span>,<span class="str">"13"</span>,<span class="str">"5"</span>,<span class="str">"/"</span>,<span class="str">"+"</span>})) <span class="cm">// 6</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; tokens.length &le; 10<sup>4</sup> &nbsp;|&nbsp; Answer fits in a 32-bit integer</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">[]int stack</span><span class="rule-tag">strconv.Atoi</span><span class="rule-tag">switch statement</span><div class="rule-note">// strconv.Atoi allowed — challenge is the stack logic</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">eval() tricks</span><span class="rule-tag">regexp</span><span class="rule-tag">math/big</span><div class="rule-note">// Implement the stack manually — no shortcuts</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>RPN is the original reason stacks were invented. Pop b first, then a — apply <code>a op b</code>. Go truncates integer division toward zero by default, which is exactly what the problem requires.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)">
+    <span class="q-number">10</span><span class="q-title">The Queue Architect</span>
+    <span class="q-lc">LC #232</span><span class="difficulty-badge diff-medium">Medium</span><span class="toggle-icon">▶</span>
+  </div>
+  <div class="card-body">
+    <div class="instructions">
+      <p>Implement a FIFO queue using only two stacks. <code>Push</code> must be O(1). <code>Pop</code> and <code>Peek</code> must be <strong>amortised O(1)</strong>.</p>
+      <ul><li><strong>inbox</strong>: receives all pushes</li><li><strong>outbox</strong>: serves all pops/peeks — refill from inbox only when empty</li><li>Each element moves inbox→outbox at most once — amortised O(1)</li></ul>
+    </div>
+    <div class="section-label">Expected Type &amp; Functions</div>
+    <pre data-lang="go"><code><span class="kw">type</span> <span class="ty">MyQueue</span> <span class="kw">struct</span> { <span class="cm">/* inbox, outbox []int */</span> }
+<span class="kw">func</span> <span class="fn">NewMyQueue</span>() <span class="ty">MyQueue</span>
+<span class="kw">func</span> (q *<span class="ty">MyQueue</span>) <span class="fn">Push</span>(x <span class="ty">int</span>)
+<span class="kw">func</span> (q *<span class="ty">MyQueue</span>) <span class="fn">Pop</span>() <span class="ty">int</span>
+<span class="kw">func</span> (q *<span class="ty">MyQueue</span>) <span class="fn">Peek</span>() <span class="ty">int</span>
+<span class="kw">func</span> (q *<span class="ty">MyQueue</span>) <span class="fn">Empty</span>() <span class="ty">bool</span></code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    q := <span class="fn">NewMyQueue</span>()
+    q.<span class="fn">Push</span>(<span class="num">1</span>); q.<span class="fn">Push</span>(<span class="num">2</span>)
+    fmt.<span class="fn">Println</span>(q.<span class="fn">Peek</span>())   <span class="cm">// 1</span>
+    fmt.<span class="fn">Println</span>(q.<span class="fn">Pop</span>())    <span class="cm">// 1</span>
+    fmt.<span class="fn">Println</span>(q.<span class="fn">Empty</span>()) <span class="cm">// false</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>Pop/Peek called only on non-empty queue &nbsp;|&nbsp; At most 100 calls total</div>
+    <div class="complexity"><span><span class="cx-label">Push: </span><span class="cx-val">O(1)</span></span><span><span class="cx-label">Pop/Peek: </span><span class="cx-val">O(1) amortised</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">two []int stacks</span><span class="rule-tag">append()</span><span class="rule-tag">slice shrink</span><span class="rule-tag">shift() helper</span><div class="rule-note">// Pour inbox→outbox only when outbox is empty</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">container/list</span><span class="rule-tag">channel</span><span class="rule-tag">sync package</span><span class="rule-tag">single stack</span><div class="rule-note">// Two stacks only — no built-in queue structures</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Only pour when outbox is empty. If outbox still has elements, pop directly. Each element crosses the boundary at most once — that is the amortised O(1) proof in one sentence.</div>
+  </div>
+</div>
+
+<footer>
+  <span>Gopher's Trial &nbsp;&middot;&nbsp; <span class="f-series">Exam 03 — The Duel</span> &nbsp;&middot;&nbsp; Month 2 of 6</span>
+  <div class="f-nav"><a href="#">&larr; Exam 02</a><a href="#">Exam 04 &rarr;</a></div>
+</footer>
+</div>
+<script>
+const opened=new Set();
+function toggle(header){
+  const body=header.nextElementSibling;
+  const isOpen=body.classList.contains('open');
+  const idx=[...document.querySelectorAll('.card-header')].indexOf(header);
+  document.querySelectorAll('.card-body').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('.card-header').forEach(h=>h.classList.remove('active'));
+  if(!isOpen){
+    body.classList.add('open');header.classList.add('active');opened.add(idx);
+    const t=document.querySelectorAll('.question-card').length;
+    document.getElementById('prog-count').textContent=`${opened.size} / ${t}`;
+    document.getElementById('prog-fill').style.width=`${opened.size/t*100}%`;
+  }
+}
+</script>
+</body>
+</html>

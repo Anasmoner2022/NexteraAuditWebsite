@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Exam 02 — The Gopher's Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0a06;--surface:#141008;--surface2:#1a1509;--border:#2a2010;--accent:#f7a330;--accent2:#ffd080;--red:#ff5f5f;--teal:#4af0c4;--text:#e8ddc8;--muted:#7a6840;--code-bg:#0a0804;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:15px;line-height:1.7;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(247,163,48,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(247,163,48,.015) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1;}
+.series-nav{display:flex;align-items:center;gap:8px;padding:18px 0 0;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap;}
+.series-nav .sep{color:var(--border);}.series-nav .current{color:var(--accent);font-weight:700;}
+.exam-pills{margin-left:auto;display:flex;gap:4px;}
+.exam-pill{width:26px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;border:1px solid var(--border);color:var(--muted);background:var(--surface);}
+.exam-pill.done{background:rgba(74,240,196,.15);color:#4af0c4;border-color:rgba(74,240,196,.3);}
+.exam-pill.active{background:var(--accent);color:#0d0a06;border-color:var(--accent);}
+.exam-pill.locked{opacity:.3;}
+header{padding:44px 0 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.header-glow{position:absolute;top:-60px;right:-80px;width:500px;height:400px;background:radial-gradient(ellipse,rgba(247,163,48,.07) 0%,transparent 65%);pointer-events:none;}
+.eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(247,163,48,.3);background:rgba(247,163,48,.07);padding:4px 12px;border-radius:4px;}
+.badge-sec{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);background:var(--surface);padding:4px 12px;border-radius:4px;}
+h1{font-size:clamp(2.1rem,5.5vw,3.4rem);font-weight:800;letter-spacing:-.025em;line-height:1.05;color:#fff;margin-bottom:14px;}h1 span{color:var(--accent);}
+.subtitle{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12.5px;max-width:580px;line-height:1.6;}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:30px;}
+.meta-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .2s;}
+.meta-item:hover{border-color:rgba(247,163,48,.25);}
+.meta-item .label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:5px;}
+.meta-item .value{font-weight:700;font-size:16px;color:var(--accent);}
+.meta-item .value.white{color:#fff;}.meta-item .value.teal{color:var(--teal);}
+.section-title{font-size:10.5px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin:52px 0 18px;display:flex;align-items:center;gap:14px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.objective-panel{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:26px 30px;}
+.obj-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin-bottom:10px;}
+.objective-panel p{color:var(--text);font-size:14px;line-height:1.75;}.objective-panel strong{color:#fff;}
+.insight-banner{background:rgba(247,163,48,.05);border:1px solid rgba(247,163,48,.2);border-radius:10px;padding:18px 22px;margin-top:12px;display:flex;align-items:flex-start;gap:14px;}
+.ib-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.ib-text{font-size:13.5px;color:var(--text);line-height:1.7;}.ib-text strong{color:var(--accent2);}
+.topics-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin-top:12px;}
+.tp-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:14px;}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;}
+.topic-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);padding:5px 0;}
+.topic-item::before{content:'▸';color:var(--accent);flex-shrink:0;margin-top:1px;}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px 26px;}
+.toc ol{list-style:none;columns:2;gap:4px;}
+.toc li{padding:7px 0;font-size:13.5px;display:flex;align-items:baseline;gap:10px;break-inside:avoid;}
+.toc-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);font-weight:700;min-width:24px;}
+.toc-name{color:var(--text);flex:1;}.toc-lc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;}
+@media(max-width:600px){.toc ol{columns:1;}}
+.progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:32px;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.ph-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);}
+.ph-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;}
+.progress-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s ease;}
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;transition:border-color .25s,box-shadow .25s;}
+.question-card:hover{border-color:rgba(247,163,48,.25);box-shadow:0 0 32px rgba(247,163,48,.04);}
+.card-header{display:flex;align-items:center;gap:14px;padding:18px 26px;border-bottom:1px solid transparent;background:var(--surface2);cursor:pointer;user-select:none;transition:background .2s;}
+.card-header:hover{background:rgba(247,163,48,.04);}.card-header.active{border-bottom-color:var(--border);}
+.q-number{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--muted);min-width:24px;}
+.q-title{font-size:16.5px;font-weight:700;color:#fff;flex:1;}
+.q-lc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
+.difficulty-badge{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:4px;background:rgba(74,240,196,.1);color:#4af0c4;border:1px solid rgba(74,240,196,.2);}
+.toggle-icon{font-size:11px;color:var(--muted);transition:transform .25s;}
+.card-header.active .toggle-icon{transform:rotate(90deg);}
+.card-body{padding:28px 32px;display:none;animation:fadeIn .2s ease;}.card-body.open{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.instructions{font-size:14px;line-height:1.8;color:var(--text);margin-bottom:22px;}
+.instructions strong{color:#fff;}
+.instructions ul{margin:10px 0 0;padding:0;list-style:none;}
+.instructions li{padding:4px 0 4px 22px;position:relative;}
+.instructions li::before{content:'—';position:absolute;left:0;color:var(--muted);}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin:22px 0 9px;}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:18px 20px;overflow-x:auto;position:relative;}
+pre::before{content:attr(data-lang);position:absolute;top:8px;right:12px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+code{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.65;color:var(--text);}
+p code,li code{background:rgba(247,163,48,.08);border:1px solid rgba(247,163,48,.15);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--accent2);font-family:'JetBrains Mono',monospace;}
+.kw{color:#7dd8ff;}.fn{color:#f7a330;}.ty{color:#ffd080;font-style:italic;}.str{color:#87e887;}.cm{color:#3d3010;font-style:italic;}.num{color:#f7c36a;}
+.console{background:#080500;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:14px 18px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;}
+.console .prompt{color:var(--accent);font-weight:700;}.console .out{color:#ffe0a0;}.console .cm{color:var(--muted);font-style:italic;}
+.constraints{background:rgba(247,163,48,.03);border:1px solid rgba(247,163,48,.12);border-radius:8px;padding:14px 18px;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);line-height:1.9;}
+.constraints .c-title{color:var(--accent);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;}
+.complexity{display:inline-flex;gap:16px;background:rgba(247,163,48,.05);border:1px solid rgba(247,163,48,.15);border-radius:6px;padding:8px 16px;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;}
+.cx-label{color:var(--muted);}.cx-val{color:var(--accent);font-weight:700;}
+.rules-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+.rules-col{border-radius:8px;padding:14px 16px;}
+.rules-col.allowed{background:rgba(247,163,48,.04);border:1px solid rgba(247,163,48,.18);}
+.rules-col.forbidden{background:rgba(255,95,95,.04);border:1px solid rgba(255,95,95,.18);}
+.rules-col .r-title{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.rules-col.allowed .r-title{color:var(--accent);}.rules-col.forbidden .r-title{color:var(--red);}
+.rules-col.allowed .r-title::before{content:'✓';font-size:12px;}.rules-col.forbidden .r-title::before{content:'✗';font-size:12px;}
+.rule-tag{display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 8px;border-radius:4px;margin:2px 2px 2px 0;line-height:1.5;}
+.rules-col.allowed .rule-tag{background:rgba(247,163,48,.1);color:#ffd080;border:1px solid rgba(247,163,48,.15);}
+.rules-col.forbidden .rule-tag{background:rgba(255,95,95,.1);color:#ffaaaa;border:1px solid rgba(255,95,95,.15);text-decoration:line-through;text-decoration-color:rgba(255,95,95,.4);}
+.rule-note{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.5;font-style:italic;}
+@media(max-width:560px){.rules-panel{grid-template-columns:1fr;}}
+.insight{background:rgba(247,163,48,.04);border:1px solid rgba(247,163,48,.15);border-left:3px solid var(--accent);border-radius:8px;padding:14px 18px;margin-top:18px;font-size:13px;color:var(--text);line-height:1.7;}
+.insight .i-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:6px;}
+footer{border-top:1px solid var(--border);margin-top:64px;padding-top:26px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+footer .f-series{color:var(--accent);font-weight:700;}
+footer .f-nav{display:flex;gap:16px;}
+footer .f-nav a{color:var(--muted);text-decoration:none;transition:color .2s;}footer .f-nav a:hover{color:var(--accent);}
+@media(max-width:600px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="series-nav">
+  <span>Gopher's Trial</span><span class="sep">›</span><span>Month 1</span><span class="sep">›</span>
+  <span class="current">Exam 02</span>
+  <div class="exam-pills">
+    <div class="exam-pill done">01</div><div class="exam-pill active">02</div>
+    <div class="exam-pill locked">03</div><div class="exam-pill locked">04</div>
+    <div class="exam-pill locked">05</div><div class="exam-pill locked">06</div>
+    <div class="exam-pill locked">07</div><div class="exam-pill locked">08</div>
+    <div class="exam-pill locked">09</div><div class="exam-pill locked">10</div>
+    <div class="exam-pill locked">11</div><div class="exam-pill locked">12</div>
+  </div>
+</nav>
+
+<header>
+  <div class="header-glow"></div>
+  <div class="eyebrow">
+    <span class="badge">🐹 Month 1 · Exam 02</span>
+    <span class="badge-sec">Go Programming · Easy Track</span>
+  </div>
+  <h1>The Gopher's <span>Toolkit</span></h1>
+  <p class="subtitle">// Hash maps — the single most important trade-off in algorithm design: space for time.</p>
+  <div class="meta-grid">
+    <div class="meta-item"><div class="label">Questions</div><div class="value">10</div></div>
+    <div class="meta-item"><div class="label">Difficulty</div><div class="value">All Easy</div></div>
+    <div class="meta-item"><div class="label">Language</div><div class="value white">Go</div></div>
+    <div class="meta-item"><div class="label">Month</div><div class="value white">1 of 6</div></div>
+    <div class="meta-item"><div class="label">Core Pattern</div><div class="value teal">O(n) map</div></div>
+    <div class="meta-item"><div class="label">Tests</div><div class="value">Required</div></div>
+  </div>
+</header>
+
+<div class="section-title">Objective</div>
+<div class="objective-panel">
+  <div class="obj-label">🎯 What you will prove in this exam</div>
+  <p>Master the <strong>hash map</strong> as a tool for trading space for time. Every problem here has a brute-force O(n²) solution and an elegant O(n) solution. Your job is to find the O(n) path — and know <strong>why</strong> a map makes it possible.</p>
+</div>
+<div class="insight-banner" style="margin-top:12px;">
+  <div class="ib-icon">💡</div>
+  <div class="ib-text"><strong>The core insight of this entire exam:</strong> A map answers "have I seen this before?" in O(1). That single idea — storing what you've seen so you don't have to search again — converts dozens of O(n²) problems into O(n). Every question here is a variation of that idea.</div>
+</div>
+
+<div class="section-title">Prerequisites</div>
+<div class="topics-panel">
+  <div class="tp-label">📚 You must know these before attempting the exam</div>
+  <div class="topic-grid">
+    <div class="topic-item"><code>map[K]V</code> creation with <code>make()</code></div>
+    <div class="topic-item">Comma-ok idiom: <code>v, ok := m[key]</code></div>
+    <div class="topic-item">Iterating maps with <code>range</code></div>
+    <div class="topic-item">Map insert, lookup, delete operations</div>
+    <div class="topic-item">Why map lookup is O(1) average</div>
+    <div class="topic-item">Frequency counting pattern</div>
+    <div class="topic-item">Bidirectional maps (two maps)</div>
+    <div class="topic-item">Cycle detection via a seen-set map</div>
+  </div>
+</div>
+
+<div class="section-title">Contents</div>
+<div class="toc">
+  <ol>
+    <li><span class="toc-num">01</span><span class="toc-name">The Pair Seeker</span><span class="toc-lc">LC #1</span></li>
+    <li><span class="toc-num">02</span><span class="toc-name">The Duplicate Detector</span><span class="toc-lc">LC #217</span></li>
+    <li><span class="toc-num">03</span><span class="toc-name">The Lone Character</span><span class="toc-lc">LC #387</span></li>
+    <li><span class="toc-num">04</span><span class="toc-name">The Common Ground</span><span class="toc-lc">LC #349</span></li>
+    <li><span class="toc-num">05</span><span class="toc-name">The Happy Number</span><span class="toc-lc">LC #202</span></li>
+    <li><span class="toc-num">06</span><span class="toc-name">The Roman Decoder</span><span class="toc-lc">LC #13</span></li>
+    <li><span class="toc-num">07</span><span class="toc-name">The Pattern Enforcer</span><span class="toc-lc">LC #290</span></li>
+    <li><span class="toc-num">08</span><span class="toc-name">The String Alchemist</span><span class="toc-lc">LC #415</span></li>
+    <li><span class="toc-num">09</span><span class="toc-name">The Ransom Note</span><span class="toc-lc">CTCI 1.3</span></li>
+    <li><span class="toc-num">10</span><span class="toc-name">The Isomorphic Detector</span><span class="toc-lc">Skiena ADM</span></li>
+  </ol>
+</div>
+
+<div class="section-title">Your Progress</div>
+<div class="progress-wrap">
+  <div class="progress-header"><span class="ph-label">Questions opened</span><span class="ph-count" id="prog-count">0 / 10</span></div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<div class="section-title">Questions</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">01</span><span class="q-title">The Pair Seeker</span><span class="q-lc">LC #1</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Among a crowd of integers, two share a secret pact — their sum equals a given <code>target</code>. Find them and return their <strong>indices</strong>. Aim for O(n) using a single-pass map.</p><ul><li>Return <code>[]int{i, j}</code> — the same element may not be used twice</li><li>Exactly one valid solution is guaranteed</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">TwoSum</span>(nums []<span class="ty">int</span>, target <span class="ty">int</span>) []<span class="ty">int</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">TwoSum</span>([]<span class="ty">int</span>{<span class="num">2</span>,<span class="num">7</span>,<span class="num">11</span>,<span class="num">15</span>}, <span class="num">9</span>))  <span class="cm">// [0 1]</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">TwoSum</span>([]<span class="ty">int</span>{<span class="num">3</span>,<span class="num">2</span>,<span class="num">4</span>},       <span class="num">6</span>))  <span class="cm">// [1 2]</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">TwoSum</span>([]<span class="ty">int</span>{<span class="num">3</span>,<span class="num">3</span>},          <span class="num">6</span>))  <span class="cm">// [0 1]</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>2 &le; nums.length &le; 10<sup>4</sup> &nbsp;|&nbsp; Only one valid answer exists</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">map[int]int</span><span class="rule-tag">make()</span><span class="rule-tag">for loop/range</span><div class="rule-note">// Single-pass: store complement→index as you go</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">nested O(n²) loops</span><span class="rule-tag">sort.Ints</span><span class="rule-tag">binary search</span><div class="rule-note">// Brute force double loop = automatic fail</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>For each number n, its partner must be <code>target - n</code>. Store <code>n → index</code> in the map. Before storing, check if <code>target - n</code> already exists. If yes — found both in one pass.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">02</span><span class="q-title">The Duplicate Detector</span><span class="q-lc">LC #217</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Given a slice of integers, return <code>true</code> if any value appears at least twice. Return <code>false</code> if every element is distinct.</p><ul><li>Return <code>true</code> the moment you find a duplicate — don't continue scanning</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">ContainsDuplicate</span>(nums []<span class="ty">int</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">ContainsDuplicate</span>([]<span class="ty">int</span>{<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">1</span>})) <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">ContainsDuplicate</span>([]<span class="ty">int</span>{<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>})) <span class="cm">// false</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; nums.length &le; 10<sup>5</sup></div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">map[int]bool</span><span class="rule-tag">comma-ok idiom</span><span class="rule-tag">for loop</span><div class="rule-note">// Return true immediately on first duplicate</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">sort.Ints</span><span class="rule-tag">nested loops</span><span class="rule-tag">slices package</span><div class="rule-note">// No sorting — map gives O(n) without it</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Use the comma-ok idiom: <code>if _, ok := seen[n]; ok { return true }</code>. Then add n to the map. This is the most common map pattern in all of algorithm design.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">03</span><span class="q-title">The Lone Character</span><span class="q-lc">LC #387</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Find the index of the <strong>first non-repeating character</strong> in string <code>s</code>. Return <code>-1</code> if none exists.</p><ul><li>Two passes: first count all frequencies, then find first with count == 1</li><li>Use a <code>[26]int</code> array — lowercase letters only</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">FirstUniqChar</span>(s <span class="ty">string</span>) <span class="ty">int</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">FirstUniqChar</span>(<span class="str">"leetcode"</span>))    <span class="cm">// 0</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">FirstUniqChar</span>(<span class="str">"loveleetcode"</span>)) <span class="cm">// 2</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">FirstUniqChar</span>(<span class="str">"aabb"</span>))         <span class="cm">// -1</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; s.length &le; 10<sup>5</sup> &nbsp;|&nbsp; lowercase English letters only</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(1)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">[26]int array</span><span class="rule-tag">byte arithmetic</span><span class="rule-tag">two for loops</span><div class="rule-note">// freq[c - 'a']++ is the key operation</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">map[byte]int</span><span class="rule-tag">strings.Count</span><span class="rule-tag">sort package</span><div class="rule-note">// Fixed array gives O(1) space — no map needed</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Two passes — never one. You cannot know if a character is unique until you've seen the entire string. Pass 1: fill frequency array. Pass 2: find first index where <code>freq[s[i]-'a'] == 1</code>.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">04</span><span class="q-title">The Common Ground</span><span class="q-lc">LC #349</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Return a slice of the <strong>unique</strong> elements that appear in both <code>nums1</code> and <code>nums2</code>.</p><ul><li>Store all of nums1 in a map. Walk nums2 checking membership</li><li>Use a second map to avoid duplicate results</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">Intersection</span>(nums1 []<span class="ty">int</span>, nums2 []<span class="ty">int</span>) []<span class="ty">int</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">Intersection</span>([]<span class="ty">int</span>{<span class="num">1</span>,<span class="num">2</span>,<span class="num">2</span>,<span class="num">1</span>}, []<span class="ty">int</span>{<span class="num">2</span>,<span class="num">2</span>}))        <span class="cm">// [2]</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">Intersection</span>([]<span class="ty">int</span>{<span class="num">4</span>,<span class="num">9</span>,<span class="num">5</span>},   []<span class="ty">int</span>{<span class="num">9</span>,<span class="num">4</span>,<span class="num">9</span>,<span class="num">8</span>,<span class="num">4</span>})) <span class="cm">// [4 9]</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; nums1.length, nums2.length &le; 1000</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n+m)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">map[int]bool</span><span class="rule-tag">two maps</span><span class="rule-tag">append()</span><div class="rule-note">// Set1 from nums1, check nums2, track added in Set2</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">sort.Ints</span><span class="rule-tag">nested O(n²) loops</span><span class="rule-tag">slices package</span><div class="rule-note">// Two maps are all you need — no sorting</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Map 1 stores nums1 as a set. Walking nums2: if element is in Map 1 AND not in Map 2 yet, add to result and Map 2. Two maps = unique intersection without sorting.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">05</span><span class="q-title">The Happy Number</span><span class="q-lc">LC #202</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>A happy number: repeatedly replace a number with the sum of squares of its digits. Return <code>true</code> if the process reaches 1, <code>false</code> if it loops forever.</p><ul><li>Detect the loop using a map of seen sums</li><li>Extract digits with <code>% 10</code> and <code>/ 10</code> — no string conversion</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">IsHappy</span>(n <span class="ty">int</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">IsHappy</span>(<span class="num">19</span>)) <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsHappy</span>(<span class="num">2</span>))  <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsHappy</span>(<span class="num">1</span>))  <span class="cm">// true</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; n &le; 2<sup>31</sup> - 1</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(log n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(log n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">map[int]bool</span><span class="rule-tag">% and /</span><span class="rule-tag">helper function</span><div class="rule-note">// seen map + sumOfSquaredDigits helper</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">strconv.Itoa</span><span class="rule-tag">fmt.Sprintf</span><span class="rule-tag">string conversion</span><div class="rule-note">// Extract digits with arithmetic — no strings</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Extract digits: <code>digit = n % 10</code>, then <code>n /= 10</code>. The map detects the cycle — the moment you see a sum you've already computed, you're in an infinite loop that will never reach 1.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">06</span><span class="q-title">The Roman Decoder</span><span class="q-lc">LC #13</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Convert a Roman numeral string to its integer value. Symbols: <code>I=1 V=5 X=10 L=50 C=100 D=500 M=1000</code>.</p><ul><li>Subtraction rule: if a smaller symbol precedes a larger one, subtract it</li><li>Walk left to right — compare current value with next value</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">RomanToInt</span>(s <span class="ty">string</span>) <span class="ty">int</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">RomanToInt</span>(<span class="str">"III"</span>))     <span class="cm">// 3</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">RomanToInt</span>(<span class="str">"LVIII"</span>))   <span class="cm">// 58</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">RomanToInt</span>(<span class="str">"MCMXCIV"</span>)) <span class="cm">// 1994</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; s.length &le; 15 &nbsp;|&nbsp; Valid Roman numeral in range [1, 3999]</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(1)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">map[byte]int</span><span class="rule-tag">for loop</span><span class="rule-tag">comparison</span><div class="rule-note">// if val[s[i]] &lt; val[s[i+1]]: subtract, else add</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">strings.Replace</span><span class="rule-tag">strings.Contains</span><span class="rule-tag">hardcoded pairs</span><div class="rule-note">// No string substitution tricks — use the map rule</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Walk left to right. If <code>val[s[i]] &lt; val[s[i+1]]</code>, subtract; otherwise add. This single rule handles all six subtraction cases without any special casing.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">07</span><span class="q-title">The Pattern Enforcer</span><span class="q-lc">LC #290</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Given a <code>pattern</code> string and space-separated words in <code>s</code>, return <code>true</code> if <code>s</code> follows the same pattern — a bijection between letters and words.</p><ul><li>Each letter maps to exactly one word — and vice versa</li><li>Two maps required: letter→word AND word→letter</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">WordPattern</span>(pattern <span class="ty">string</span>, s <span class="ty">string</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">WordPattern</span>(<span class="str">"abba"</span>, <span class="str">"dog cat cat dog"</span>))  <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">WordPattern</span>(<span class="str">"abba"</span>, <span class="str">"dog cat cat fish"</span>)) <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">WordPattern</span>(<span class="str">"aaaa"</span>, <span class="str">"dog cat cat dog"</span>))  <span class="cm">// false</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; pattern.length &le; 300</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(n)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">map[byte]string</span><span class="rule-tag">map[string]byte</span><span class="rule-tag">strings.Fields</span><div class="rule-note">// Both directions must agree — one map is not enough</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">single map only</span><span class="rule-tag">sort package</span><span class="rule-tag">reflect package</span><div class="rule-note">// One map misses the reverse constraint</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>One map is not enough. Consider <code>"ab"</code> vs <code>"dog dog"</code> — a single letter→word map would pass incorrectly. You need both directions. If either conflicts, return false immediately.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">08</span><span class="q-title">The String Alchemist</span><span class="q-lc">LC #415</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Two non-negative integers arrive as strings of digits. Add them and return the result as a string. Do not convert to <code>int</code>.</p><ul><li>Walk both strings from right to left with carry</li><li><code>digit = s[i] - '0'</code> converts a byte to its int value</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">AddStrings</span>(num1 <span class="ty">string</span>, num2 <span class="ty">string</span>) <span class="ty">string</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">AddStrings</span>(<span class="str">"11"</span>,  <span class="str">"123"</span>)) <span class="cm">// 134</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">AddStrings</span>(<span class="str">"456"</span>, <span class="str">"77"</span>))  <span class="cm">// 533</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">AddStrings</span>(<span class="str">"0"</span>,   <span class="str">"0"</span>))   <span class="cm">// 0</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; num1.length, num2.length &le; 10<sup>4</sup></div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(max(n,m))</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(max(n,m))</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">byte arithmetic</span><span class="rule-tag">strings.Builder</span><span class="rule-tag">for loop</span><div class="rule-note">// sum = carry + digitA + digitB, write sum%10, carry sum/10</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">strconv.Atoi</span><span class="rule-tag">strconv.ParseInt</span><span class="rule-tag">math/big</span><div class="rule-note">// Must NOT convert the whole string to an integer</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Walk both strings from the right. At each step: <code>sum = carry + digitA + digitB</code>. Write <code>sum % 10</code>, carry <code>sum / 10</code>. After the loop, if carry == 1, prepend it. Reverse the result at the end.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">09</span><span class="q-title">The Ransom Note</span><span class="q-lc">CTCI 1.3</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Return <code>true</code> if <code>ransomNote</code> can be built from letters in <code>magazine</code>. Each letter may only be used once. Both strings contain lowercase English letters only.</p><ul><li>Count magazine with <code>[26]int</code>, decrement for each ransom letter</li><li>Return <code>false</code> immediately when any count goes negative</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">CanConstruct</span>(ransomNote <span class="ty">string</span>, magazine <span class="ty">string</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">CanConstruct</span>(<span class="str">"a"</span>,  <span class="str">"b"</span>))   <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">CanConstruct</span>(<span class="str">"aa"</span>, <span class="str">"ab"</span>))  <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">CanConstruct</span>(<span class="str">"aa"</span>, <span class="str">"aab"</span>)) <span class="cm">// true</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; ransomNote.length, magazine.length &le; 10<sup>5</sup></div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n+m)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(1)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">[26]int array</span><span class="rule-tag">byte arithmetic</span><span class="rule-tag">early return</span><div class="rule-note">// Count magazine up, ransom down — early exit on negative</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">map[byte]int</span><span class="rule-tag">strings.Count</span><span class="rule-tag">sort package</span><div class="rule-note">// Fixed array gives O(1) space — no map needed</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Same frequency-counting as the Anagram problem — but asymmetric. Count magazine up, then decrement for each ransom letter. The first time a count goes negative, that letter is exhausted.</div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="card-header" onclick="toggle(this)"><span class="q-number">10</span><span class="q-title">The Isomorphic Detector</span><span class="q-lc">Skiena ADM</span><span class="difficulty-badge">Easy</span><span class="toggle-icon">▶</span></div>
+  <div class="card-body">
+    <div class="instructions"><p>Two strings are <strong>isomorphic</strong> if the characters in one can be replaced consistently to get the other — with no two characters mapping to the same character.</p><ul><li><code>"egg"</code> → <code>"add"</code>: e→a, g→d ✓</li><li><code>"foo"</code> → <code>"bar"</code>: o would map to both a and r ✗</li><li>Two maps required — one per direction</li></ul></div>
+    <div class="section-label">Expected Function</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">IsIsomorphic</span>(s <span class="ty">string</span>, t <span class="ty">string</span>) <span class="ty">bool</span> {
+
+}</code></pre>
+    <div class="section-label">Usage</div>
+    <pre data-lang="go"><code><span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="fn">IsIsomorphic</span>(<span class="str">"egg"</span>,   <span class="str">"add"</span>))   <span class="cm">// true</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsIsomorphic</span>(<span class="str">"foo"</span>,   <span class="str">"bar"</span>))   <span class="cm">// false</span>
+    fmt.<span class="fn">Println</span>(<span class="fn">IsIsomorphic</span>(<span class="str">"paper"</span>, <span class="str">"title"</span>)) <span class="cm">// true</span>
+}</code></pre>
+    <div class="constraints"><div class="c-title">Constraints</div>1 &le; s.length &le; 5&times;10<sup>4</sup> &nbsp;|&nbsp; s.length == t.length</div>
+    <div class="complexity"><span><span class="cx-label">Time: </span><span class="cx-val">O(n)</span></span><span><span class="cx-label">Space: </span><span class="cx-val">O(1)</span></span></div>
+    <div class="section-label">Allowed &amp; Forbidden</div>
+    <div class="rules-panel">
+      <div class="rules-col allowed"><div class="r-title">Allowed</div><span class="rule-tag">map[byte]byte</span><span class="rule-tag">two maps</span><span class="rule-tag">for loop</span><div class="rule-note">// s→t map AND t→s map — both must agree at every step</div></div>
+      <div class="rules-col forbidden"><div class="r-title">Forbidden</div><span class="rule-tag">single map only</span><span class="rule-tag">strings package</span><span class="rule-tag">reflect package</span><div class="rule-note">// One map is insufficient — same trap as WordPattern</div></div>
+    </div>
+    <div class="insight"><div class="i-label">💡 Key Insight</div>Isomorphic is identical in structure to WordPattern — just at the character level instead of the word level. Same two-map bijection pattern solves both. If you understood Q7, this is one line different.</div>
+  </div>
+</div>
+
+<footer>
+  <span>Gopher's Trial &nbsp;&middot;&nbsp; <span class="f-series">Exam 02 — The Toolkit</span> &nbsp;&middot;&nbsp; Month 1 of 6</span>
+  <div class="f-nav"><a href="#">&larr; Exam 01</a><a href="#">Exam 03 &rarr;</a></div>
+</footer>
+</div>
+<script>
+const opened=new Set();
+function toggle(header){
+  const body=header.nextElementSibling;
+  const isOpen=body.classList.contains('open');
+  const idx=[...document.querySelectorAll('.card-header')].indexOf(header);
+  document.querySelectorAll('.card-body').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('.card-header').forEach(h=>h.classList.remove('active'));
+  if(!isOpen){
+    body.classList.add('open');header.classList.add('active');opened.add(idx);
+    const t=document.querySelectorAll('.question-card').length;
+    document.getElementById('prog-count').textContent=`${opened.size} / ${t}`;
+    document.getElementById('prog-fill').style.width=`${opened.size/t*100}%`;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>01Edu Cairo — Programme Guide 2025–2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #07080b;
+  --surf:    #0d0f14;
+  --surf2:   #121520;
+  --surf3:   #181c28;
+  --border:  #1e2336;
+  --border2: #282f45;
+  --text:    #c2c8d8;
+  --muted:   #4e566e;
+  --white:   #eceef5;
+
+  /* Section accent colours */
+  --fri:   #f5c842;   /* Friday offline    — amber  */
+  --onl:   #4af0c4;   /* Online meeting    — teal   */
+  --chk:   #5ba3ff;   /* Checkpoints       — blue   */
+  --aud:   #e06bff;   /* Audit system      — violet */
+  --comp:  #ff6b6b;   /* Competition       — coral  */
+  --comm:  #6dc96d;   /* Community infra   — green  */
+  --work:  #ff9d4d;   /* Workshops         — orange */
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  line-height:1.7;
+  min-height:100vh;
+}
+
+/* noise */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+.wrap{max-width:1060px;margin:0 auto;padding:0 28px 120px;position:relative;z-index:1;}
+
+/* ── TOP BAR ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 0 0;flex-wrap:wrap;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+}
+.topbar .brand{color:var(--white);font-weight:700;font-size:11px;display:flex;align-items:center;gap:8px;}
+.topbar .brand em{color:var(--fri);font-style:normal;}
+.live{display:flex;align-items:center;gap:6px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--onl);box-shadow:0 0 8px var(--onl);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ── HERO ── */
+.hero{padding:60px 0 52px;border-bottom:1px solid var(--border);}
+.hero-eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--fri);
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--fri);}
+h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.8rem,6vw,5rem);
+  font-weight:400;line-height:1.05;letter-spacing:-.01em;
+  color:var(--white);margin-bottom:20px;
+}
+h1 i{font-style:italic;color:var(--fri);}
+.hero-lead{font-size:15.5px;color:var(--muted);max-width:620px;line-height:1.8;margin-bottom:40px;}
+.hero-lead strong{color:var(--text);}
+
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.pillar{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.pillar .p-icon{font-size:18px;margin-bottom:7px;}
+.pillar .p-title{font-size:12.5px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.pillar .p-desc{font-size:11.5px;color:var(--muted);line-height:1.5;}
+
+/* ── SECTION TITLES ── */
+.sec-head{
+  display:flex;align-items:center;gap:14px;
+  margin:64px 0 0;padding-bottom:18px;
+  border-bottom:1px solid var(--border);
+}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);min-width:24px;
+}
+.sec-icon{font-size:22px;}
+.sec-title{
+  font-family:'Instrument Serif',serif;font-size:22px;
+  color:var(--white);font-weight:400;
+}
+.sec-tag{
+  margin-left:auto;
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  padding:4px 10px;border-radius:20px;
+}
+.sec-body{padding-top:24px;}
+
+/* ── GENERIC CARD ── */
+.card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+}
+.card:hover{box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.card-stripe{height:2px;width:100%;}
+.card-body{padding:22px 24px 24px;}
+.card-title{
+  font-family:'Instrument Serif',serif;
+  font-size:17px;color:var(--white);margin-bottom:8px;
+}
+.card-desc{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
+.card-desc strong{color:var(--text);}
+.card-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.card-list li{font-size:12.5px;color:var(--text);display:flex;align-items:baseline;gap:8px;line-height:1.5;}
+.card-list li::before{font-family:'JetBrains Mono',monospace;font-size:11px;flex-shrink:0;}
+.card-foot{
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--muted);display:flex;align-items:center;gap:6px;
+}
+
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+
+/* colour variants per section */
+.c-fri  .card-stripe{background:var(--fri);}
+.c-fri  .card-list li::before{content:'→';color:var(--fri);}
+.c-fri:hover{border-color:rgba(245,200,66,.3);}
+
+.c-onl  .card-stripe{background:var(--onl);}
+.c-onl  .card-list li::before{content:'→';color:var(--onl);}
+.c-onl:hover{border-color:rgba(74,240,196,.3);}
+
+.c-chk  .card-stripe{background:var(--chk);}
+.c-chk  .card-list li::before{content:'→';color:var(--chk);}
+.c-chk:hover{border-color:rgba(91,163,255,.3);}
+
+.c-aud  .card-stripe{background:var(--aud);}
+.c-aud  .card-list li::before{content:'→';color:var(--aud);}
+.c-aud:hover{border-color:rgba(224,107,255,.3);}
+
+.c-comp .card-stripe{background:var(--comp);}
+.c-comp .card-list li::before{content:'→';color:var(--comp);}
+.c-comp:hover{border-color:rgba(255,107,107,.3);}
+
+.c-comm .card-stripe{background:var(--comm);}
+.c-comm .card-list li::before{content:'→';color:var(--comm);}
+.c-comm:hover{border-color:rgba(109,201,109,.3);}
+
+.c-work .card-stripe{background:var(--work);}
+.c-work .card-list li::before{content:'→';color:var(--work);}
+.c-work:hover{border-color:rgba(255,157,77,.3);}
+
+/* ── WEEKLY CALENDAR ── */
+.week-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:8px;margin-top:6px;
+}
+.day-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:8px;padding:14px 10px;text-align:center;
+  transition:border-color .2s;
+}
+.day-name{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);margin-bottom:8px;
+}
+.day-items{display:flex;flex-direction:column;gap:5px;}
+.day-event{
+  font-size:10.5px;line-height:1.4;color:var(--text);
+  padding:4px 6px;border-radius:4px;
+  background:var(--surf2);border:1px solid var(--border);
+}
+.day-card.active{border-color:var(--border2);}
+
+/* ── MONTHLY TIMELINE ── */
+.month-timeline{display:flex;flex-direction:column;gap:0;margin-top:4px;}
+.mtl-row{
+  display:grid;grid-template-columns:100px 1fr;
+  position:relative;
+}
+.mtl-row::before{
+  content:'';position:absolute;left:99px;top:28px;bottom:0;
+  width:1px;background:var(--border);
+}
+.mtl-row:last-child::before{display:none;}
+.mtl-left{
+  padding:18px 20px 18px 0;
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);text-align:right;position:relative;
+}
+.mtl-dot{
+  position:absolute;right:-8px;top:24px;
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--bg);
+}
+.mtl-right{
+  padding:18px 0 18px 24px;border-left:1px solid var(--border);
+}
+.mtl-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.mtl-desc{font-size:12.5px;color:var(--muted);line-height:1.6;}
+.mtl-desc strong{color:var(--text);}
+
+/* ── AUDIT RULES TABLE ── */
+.audit-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:4px;}
+.audit-table th{
+  background:var(--surf2);
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--aud);padding:10px 14px;
+  border-bottom:2px solid var(--aud);text-align:left;
+}
+.audit-table td{
+  padding:10px 14px;font-size:12.5px;color:var(--text);
+  border-bottom:1px solid var(--border);
+  background:var(--surf);line-height:1.5;
+}
+.audit-table tr:last-child td{border-bottom:none;}
+.audit-table tr:nth-child(even) td{background:var(--surf2);}
+.audit-table .label{color:var(--white);font-weight:500;}
+
+/* ── QUOTE BLOCK ── */
+.quote{
+  border:1px solid var(--border);
+  border-left:3px solid var(--fri);
+  background:var(--surf);border-radius:12px;
+  padding:26px 30px;margin-top:20px;
+}
+.quote p{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:17.5px;color:var(--white);line-height:1.6;margin-bottom:8px;
+}
+.quote .attr{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.12em;
+}
+
+/* ── INLINE LABEL TAG ── */
+.tag{
+  display:inline-flex;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  padding:3px 9px;border-radius:4px;margin-left:6px;
+  vertical-align:middle;
+}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);margin-top:80px;padding-top:28px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);
+}
+footer .hl{color:var(--fri);}
+
+@media(max-width:680px){
+  .week-grid{grid-template-columns:repeat(4,1fr);}
+  .pillars{grid-template-columns:1fr 1fr;}
+  .mtl-row{grid-template-columns:72px 1fr;}
+  .mtl-row::before{left:71px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">🐹 <em>01Edu</em> Cairo · Programme Guide</div>
+  <div class="live"><div class="dot"></div>2025–2026 · Active</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Extracurricular &amp; Community Programme</div>
+  <h1>How we run<br><i>this school.</i></h1>
+  <p class="hero-lead">
+    This document is the <strong>operating manual</strong> for 01Edu Cairo. It covers how we meet,
+    how we learn from each other, how we hold each other accountable,
+    and how we build a community that outlasts the curriculum.
+  </p>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="p-icon">📅</div>
+      <div class="p-title">Weekly Rhythm</div>
+      <div class="p-desc">Two fixed meetings. One offline, one online.</div>
+    </div>
+    <div class="pillar">
+      <div class="p-icon">🎯</div>
+      <div class="p-title">Checkpoints</div>
+      <div class="p-desc">2 per month. You always know where you stand.</div>
+    </div>
+    <div class="pillar">
+      <div class="p-icon">🔍</div>
+      <div class="p-title">Audits</div>
+      <div class="p-desc">Reformed. Rules. Effective. Final audit offline.</div>
+    </div>
+    <div class="pillar">
+      <div class="p-icon">🏆</div>
+      <div class="p-title">Competition</div>
+      <div class="p-desc">Monthly. Winner rewarded + featured publicly.</div>
+    </div>
+    <div class="pillar">
+      <div class="p-icon">🌍</div>
+      <div class="p-title">Community</div>
+      <div class="p-desc">GitHub org, LinkedIn posts, buddy system.</div>
+    </div>
+    <div class="pillar">
+      <div class="p-icon">🎙️</div>
+      <div class="p-title">Workshops</div>
+      <div class="p-desc">Future: engineers + soft skills instructors.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 1: WEEKLY RHYTHM ══ -->
+<div class="sec-head">
+  <span class="sec-num">01</span>
+  <span class="sec-icon">📅</span>
+  <span class="sec-title">Weekly Rhythm</span>
+  <span class="sec-tag" style="background:rgba(245,200,66,.1);color:var(--fri);border:1px solid rgba(245,200,66,.2);">Every Week</span>
+</div>
+<div class="sec-body">
+  <p style="font-size:14px;color:var(--muted);max-width:640px;margin-bottom:24px;line-height:1.8;">
+    Two meetings every week — different format, different purpose, neither optional.
+    The offline session is for <strong style="color:var(--text)">deep work and presence</strong>.
+    The online session is for <strong style="color:var(--text)">accessibility and accountability</strong>.
+    Working students can always attend at least one.
+  </p>
+
+  <div class="grid-2">
+    <div class="card c-fri">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🏢 Friday Offline Session</div>
+        <div class="card-desc">On-campus every Friday. </div>
+        <ul class="card-list">
+          <li>instructor-led technical session (Go mastery, algorithms, tools) and student project presentations + peer Q&A (see Section 4)</li>
+          <li>Each session is about 90 minutes — no extensions, no exceptions</li>
+          <li>Attendance is tracked — missing 3 consecutive Fridays = warning</li>
+        </ul>
+        <div class="card-foot">🗓 Every Friday &nbsp;·&nbsp; On-campus &nbsp;·&nbsp; 2:00 PM → 8:00 PM</div>
+      </div>
+    </div>
+
+    <div class="card c-onl">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">💻 Online Weekly Meetup</div>
+        <div class="card-desc">Midweek online session — open to all students regardless of schedule. <strong>Q&amp;A, checkpoint discussions, and buddy check-ins</strong>.</div>
+        <ul class="card-list">
+          <li>Open Q&amp;A: any topic from the current exam month</li>
+          <li>Checkpoint status: buddy pairs report progress to the group</li>
+          <li>One student shares something they learned that week — 5 minutes</li>
+          <li>Recorded and posted for students who couldn't attend</li>
+        </ul>
+        <div class="card-foot">🗓 Every Wednesday &nbsp;·&nbsp; Online &nbsp;·&nbsp; 8:00 PM → 11:00 PM</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly calendar -->
+  <div style="margin-top:24px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:12px;">A Typical Week at a Glance</div>
+    <div class="week-grid">
+      <div class="day-card">
+        <div class="day-name">Sun</div>
+        <div class="day-items">
+          <div class="day-event" style="border-color:rgba(91,163,255,.2);color:#5ba3ff;">Checkpoint closes</div>
+        </div>
+      </div>
+      <div class="day-card">
+        <div class="day-name">Mon</div>
+        <div class="day-items">
+          <div class="day-event">Self-study</div>
+        </div>
+      </div>
+      <div class="day-card active">
+        <div class="day-name">Tue</div>
+        <div class="day-items">
+          <div class="day-event">Self-study</div>
+        </div>
+      </div>
+      <div class="day-card active">
+        <div class="day-name">Wed</div>
+        <div class="day-items">
+          <div class="day-event" style="border-color:rgba(74,240,196,.25);color:#4af0c4;">Online meetup 8 PM</div>
+        </div>
+      </div>
+      <div class="day-card">
+        <div class="day-name">Thu</div>
+        <div class="day-items">
+          <div class="day-event">Self-study</div>
+        </div>
+      </div>
+      <div class="day-card active">
+        <div class="day-name">Fri</div>
+        <div class="day-items">
+          <div class="day-event" style="border-color:rgba(245,200,66,.25);color:#f5c842;">Offline session 5 PM</div>
+          <div class="day-event" style="border-color:rgba(91,163,255,.2);color:#5ba3ff;">Checkpoint window opens</div>
+        </div>
+      </div>
+      <div class="day-card">
+        <div class="day-name">Sat</div>
+        <div class="day-items">
+          <div class="day-event">Rest / catch-up</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 2: CHECKPOINTS ══ -->
+<div class="sec-head">
+  <span class="sec-num">02</span>
+  <span class="sec-icon">🎯</span>
+  <span class="sec-title">Monthly Checkpoints</span>
+  <span class="sec-tag" style="background:rgba(91,163,255,.1);color:var(--chk);border:1px solid rgba(91,163,255,.2);">2 Per Month</span>
+</div>
+<div class="sec-body">
+  <p style="font-size:14px;color:var(--muted);max-width:640px;margin-bottom:24px;line-height:1.8;">
+    Two checkpoints every month — not exams, not grades. A structured moment to pause,
+    reflect, and <strong style="color:var(--text)">know exactly where you stand</strong>.
+    Your buddy reviews yours before it's submitted. You review theirs.
+    The end-of-month session closes the loop and opens the next chapter.
+  </p>
+
+  <!-- Monthly timeline -->
+  <div class="month-timeline">
+    <div class="mtl-row">
+      <div class="mtl-left">Week 1–2<div class="mtl-dot" style="background:var(--chk)"></div></div>
+      <div class="mtl-right">
+        <div class="mtl-title">Checkpoint 1 — Mid-month pulse</div>
+        <div class="mtl-desc">Covers the first two weeks of the exam curriculum. <strong>Your buddy reviews your checkpoint answers before you submit</strong> — they flag anything unclear or incorrect. Opens Friday, closes Sunday online meetup.</div>
+      </div>
+    </div>
+    <div class="mtl-row">
+      <div class="mtl-left">Week 3–4<div class="mtl-dot" style="background:var(--chk)"></div></div>
+      <div class="mtl-right">
+        <div class="mtl-title">Checkpoint 2 — Month-end mastery check</div>
+        <div class="mtl-desc">Covers the full month's curriculum. Harder than Checkpoint 1. <strong>Same buddy review process</strong> — buddy must leave at least 2 written comments before you submit.</div>
+      </div>
+    </div>
+    <div class="mtl-row">
+      <div class="mtl-left">Last Friday<div class="mtl-dot" style="background:var(--fri)"></div></div>
+      <div class="mtl-right">
+        <div class="mtl-title">End-of-Month Session</div>
+        <div class="mtl-desc">Offline session with a different format. Instructor reveals <strong>what the next month's curriculum covers</strong> and why it matters. Students share one thing they understood differently by the end of the month. Competition winner announced. 30 minutes only.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;" class="grid-2">
+    <div class="card c-chk">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🤝 The Buddy System</div>
+        <div class="card-desc">Each student is paired with one other for the entire month. You review each other's checkpoints. You are each other's first line of accountability.</div>
+        <ul class="card-list">
+          <li>Pairs assigned by instructor at the start of each month — rotates every month</li>
+          <li>Buddy must review and leave written comments before you submit</li>
+          <li>If your buddy is stuck, you are expected to help — not give answers</li>
+          <li>Pairs present together at the online meetup checkpoint discussion</li>
+        </ul>
+        <div class="card-foot">🔄 New pairs every month &nbsp;·&nbsp; Rotates so you meet everyone</div>
+      </div>
+    </div>
+    <div class="card c-chk">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">📋 What Checkpoints Test</div>
+        <div class="card-desc">Not just code. Checkpoints test whether you can <strong>explain</strong> what you built — why you chose an approach, what the complexity is, what you would do differently.</div>
+        <ul class="card-list">
+          <li>Implement the required function correctly</li>
+          <li>Write a comment explaining your approach in plain language</li>
+          <li>State the time and space complexity of your solution</li>
+          <li>Name one alternative approach and why you didn't use it</li>
+        </ul>
+        <div class="card-foot">📌 Submitted via 01Edu platform &nbsp;·&nbsp; Opens Sunday, closes Friday</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 3: AUDIT SYSTEM ══ -->
+<div class="sec-head">
+  <span class="sec-num">03</span>
+  <span class="sec-icon">🔍</span>
+  <span class="sec-title">The Audit System</span>
+  <span class="sec-tag" style="background:rgba(224,107,255,.1);color:var(--aud);border:1px solid rgba(224,107,255,.2);">Reformed</span>
+</div>
+<div class="sec-body">
+  <p style="font-size:14px;color:var(--muted);max-width:640px;margin-bottom:24px;line-height:1.8;">
+    Most peer audits fail because the auditor doesn't know what to look for.
+    These rules fix that. <strong style="color:var(--text)">An audit is not a check — it's a conversation.</strong>
+    The auditor learns as much as the person being audited.
+    The final audit of every project is always offline — face to face.
+  </p>
+
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="card c-aud">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Rules for Giving an Effective Audit</div>
+        <div class="card-desc">These rules apply to every audit — checkpoint, project, or exam.</div>
+        <ul class="card-list">
+          <li><strong style="color:var(--white)">Read before you judge.</strong> Run the code. Understand what it does before you comment on how it does it.</li>
+          <li><strong style="color:var(--white)">Ask, don't tell.</strong> "Why did you use a map here instead of a slice?" teaches more than "you should use a slice."</li>
+          <li><strong style="color:var(--white)">Comment on the thinking, not the person.</strong> "This approach is O(n²)" not "you wrote slow code."</li>
+          <li><strong style="color:var(--white)">Find one thing that is good.</strong> Every solution has something worth noting. Name it first.</li>
+          <li><strong style="color:var(--white)">Leave the audit better than you found it.</strong> Your comments must be actionable — not just observations.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card c-aud">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">The Audit Checklist</div>
+        <div class="card-desc">Use this for every peer audit. You must address all 5 points.</div>
+        <ul class="card-list">
+          <li><strong style="color:var(--white)">Correctness:</strong> Does the solution pass all test cases including edge cases?</li>
+          <li><strong style="color:var(--white)">Complexity:</strong> Is the time and space complexity what was required?</li>
+          <li><strong style="color:var(--white)">Readability:</strong> Can you understand the code without asking the author?</li>
+          <li><strong style="color:var(--white)">Comments:</strong> Does the author explain their reasoning, not just what the code does?</li>
+          <li><strong style="color:var(--white)">Rules:</strong> Were any forbidden functions or packages used?</li>
+        </ul>
+        <div class="card-foot">⏱ Minimum 20 minutes per audit &nbsp;·&nbsp; Written comments required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit types table -->
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:10px;">Audit Types &amp; Format</div>
+  <table class="audit-table">
+    <thead>
+      <tr><th>Audit Type</th><th>Format</th><th>Who</th><th>When</th><th>Duration</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="label">Checkpoint Audit</td><td>Written comments on 01Edu</td><td>Buddy pair</td><td>Before submission deadline</td><td>20 min minimum</td></tr>
+      <tr><td class="label">Peer Project Audit</td><td>Written + verbal (online)</td><td>Random pair assigned by instructor</td><td>Anytime</td><td>30 min</td></tr>
+      <tr><td class="label">Final Project Audit</td><td><strong>Offline only — face to face</strong></td><td>Instructor + one peer</td><td>End of project cycle</td><td>45 min</td></tr>
+      <tr><td class="label">Monthly Competition Audit</td><td>Panel review + live Q&amp;A</td><td>All participants</td><td>Last Friday of month</td><td>10 min per team</td></tr>
+    </tbody>
+  </table>
+
+  <div class="quote" style="border-left-color:var(--aud);">
+    <p>"The final audit is always offline. You cannot hide behind a screen when someone asks you to explain your own code. That discomfort is exactly the point."</p>
+    <div class="attr">— 01Edu Cairo · Audit Policy</div>
+  </div>
+</div>
+
+<!-- ══ SECTION 4: PRESENTATIONS ══ -->
+<div class="sec-head">
+  <span class="sec-num">04</span>
+  <span class="sec-icon">🎤</span>
+  <span class="sec-title">Friday Project Presentations</span>
+  <span class="sec-tag" style="background:rgba(245,200,66,.1);color:var(--fri);border:1px solid rgba(245,200,66,.2);">weekly</span>
+</div>
+<div class="sec-body">
+  <p style="font-size:14px;color:var(--muted);max-width:640px;margin-bottom:24px;line-height:1.8;">
+    Every other Friday, teams present their current project to the entire cohort.
+    <strong style="color:var(--text)">The instructor selects teams</strong> — you do not volunteer.
+    This simulates a real engineering environment where you present when you're called on, not when you feel ready.
+  </p>
+
+  <div class="grid-3">
+    <div class="card c-fri">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">📌 Format</div>
+        <ul class="card-list">
+          <li>10 minutes to present, 10 minutes Q&amp;A — no exceptions</li>
+          <li>Demo first — show the working thing before explaining how it works</li>
+          <li>No slides required — whiteboard and terminal are enough</li>
+          <li>Both team members must speak — not just the strongest one</li>
+        </ul>
+        <div class="card-foot">🗓 Even Fridays &nbsp;·&nbsp; 2–3 teams per session</div>
+      </div>
+    </div>
+    <div class="card c-fri">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">❓ What the Audience Must Do</div>
+        <ul class="card-list">
+          <li>Every student must ask at least one question per session</li>
+          <li>Questions must be technical — not compliments</li>
+          <li>Challenge the approach: "why not do X instead of Y?"</li>
+          <li>The best question of the session is noted by the instructor</li>
+        </ul>
+        <div class="card-foot">👥 Whole cohort attends &nbsp;·&nbsp; Active participation required</div>
+      </div>
+    </div>
+    <div class="card c-fri">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">📊 What Gets Evaluated</div>
+        <ul class="card-list">
+          <li>Can you explain your solution to someone who didn't write it?</li>
+          <li>Can you defend a decision under pressure?</li>
+          <li>Do you know what you would do differently next time?</li>
+          <li>Can your teammate explain your part as well as you can?</li>
+        </ul>
+        <div class="card-foot">💬 Instructor gives written feedback same day</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 5: COMPETITION ══ -->
+<div class="sec-head">
+  <span class="sec-num">05</span>
+  <span class="sec-icon">🏆</span>
+  <span class="sec-title">Monthly Competition</span>
+  <span class="sec-tag" style="background:rgba(255,107,107,.1);color:var(--comp);border:1px solid rgba(255,107,107,.2);">Every Month</span>
+</div>
+<div class="sec-body">
+  <p style="font-size:14px;color:var(--muted);max-width:640px;margin-bottom:24px;line-height:1.8;">
+    One competition every month. A theme is announced at the start of the month.
+    Teams of 2–3 build and submit by the last Friday.
+    <strong style="color:var(--text)">The winner is rewarded and featured publicly</strong> —
+    on the school's social media and the GitHub organisation.
+  </p>
+
+  <div class="grid-2">
+    <div class="card c-comp">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🗓 Timeline</div>
+        <ul class="card-list">
+          <li><strong style="color:var(--white)">Day 1:</strong> Theme announced at start-of-month session</li>
+          <li><strong style="color:var(--white)">Week 1–3:</strong> Teams build alongside regular curriculum</li>
+          <li><strong style="color:var(--white)">Week 4, Wednesday:</strong> Submissions close on 01Edu</li>
+          <li><strong style="color:var(--white)">Last Friday:</strong> Teams present (5 min each), panel votes, winner announced</li>
+        </ul>
+        <div class="card-foot">🗓 Announced Month Day 1 &nbsp;·&nbsp; Judged Last Friday</div>
+      </div>
+    </div>
+    <div class="card c-comp">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🏅 Judging Criteria</div>
+        <ul class="card-list">
+          <li><strong style="color:var(--white)">Working demo (40%):</strong> Does it run? Does it do what it claims?</li>
+          <li><strong style="color:var(--white)">Code quality (30%):</strong> Readable, well-structured, no obvious hacks</li>
+          <li><strong style="color:var(--white)">Defence (20%):</strong> Can the team explain every decision under Q&amp;A?</li>
+          <li><strong style="color:var(--white)">Originality (10%):</strong> Did they take the theme somewhere unexpected?</li>
+        </ul>
+        <div class="card-foot">👨‍⚖️ Panel: instructor + 2 senior students from previous cohort</div>
+      </div>
+    </div>
+    <div class="card c-comp">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🎁 Rewards</div>
+        <ul class="card-list">
+          <li>Project featured on school's LinkedIn and GitHub organisation page</li>
+          <li>Winner's name and photo posted publicly — builds their online presence</li>
+          <li>Project added permanently to <code>01edu-cairo</code> GitHub org</li>
+          <li>Physical reward determined by school management each month</li>
+        </ul>
+        <div class="card-foot">📢 Posted publicly within 24 hours of the last Friday session</div>
+      </div>
+    </div>
+    <div class="card c-comp">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">📋 Rules</div>
+        <ul class="card-list">
+          <li>Teams of 2–3 — solo entries not accepted</li>
+          <li>Must use Go — the language of the curriculum</li>
+          <li>No copying from tutorials — code must be written during the month</li>
+          <li>All team members must be able to explain all parts of the project</li>
+        </ul>
+        <div class="card-foot">⚠️ Projects failing the defence round are disqualified</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 6: COMMUNITY INFRASTRUCTURE ══ -->
+<div class="sec-head">
+  <span class="sec-num">06</span>
+  <span class="sec-icon">🌍</span>
+  <span class="sec-title">Community Infrastructure</span>
+  <span class="sec-tag" style="background:rgba(109,201,109,.1);color:var(--comm);border:1px solid rgba(109,201,109,.2);">Permanent</span>
+</div>
+<div class="sec-body">
+  <p style="font-size:14px;color:var(--muted);max-width:640px;margin-bottom:24px;line-height:1.8;">
+    Three permanent systems that outlast any individual student.
+    Each one builds a record of what this cohort accomplished —
+    visible to employers, future students, and the Egyptian tech community.
+  </p>
+
+  <div class="grid-3">
+    <div class="card c-comm">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🐙 School GitHub Org</div>
+        <div class="card-desc">A public GitHub organisation — <code style="background:rgba(109,201,109,.1);padding:1px 5px;border-radius:3px;color:#6dc96d;font-size:11px;">01edu-cairo</code> — that acts as the school's permanent portfolio.</div>
+        <ul class="card-list">
+          <li>Every competition winner's project is forked in</li>
+          <li>Every Friday presentation project is linked</li>
+          <li>Students can point employers directly to the org</li>
+          <li>Contribution graph of the whole cohort — public proof of work</li>
+        </ul>
+        <div class="card-foot">🔗 github.com/01edu-cairo &nbsp;·&nbsp; Public forever</div>
+      </div>
+    </div>
+    <div class="card c-comm">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">📝 State of the Cohort</div>
+        <div class="card-desc">One LinkedIn post per month. What the cohort learned, who won the competition, what's coming next. Written by a rotating student — not always the instructor.</div>
+        <ul class="card-list">
+          <li>Published on the last day of each month</li>
+          <li>Written by a different student each month — chosen by the instructor</li>
+          <li>Covers: curriculum topic, competition winner, one standout moment</li>
+          <li>Builds the writer's LinkedIn presence and the school's reputation</li>
+        </ul>
+        <div class="card-foot">📅 Last day of each month &nbsp;·&nbsp; LinkedIn + school channels</div>
+      </div>
+    </div>
+    <div class="card c-comm">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🤝 Buddy System</div>
+        <div class="card-desc">Each student is paired with one other for the entire month. You review each other's checkpoints, attend the online session together, and are each other's first point of contact when stuck.</div>
+        <ul class="card-list">
+          <li>Pairs rotate every month — you will pair with everyone over 6 months</li>
+          <li>Buddy review is required before checkpoint submission</li>
+          <li>If either buddy misses the online session, they owe the other a written summary</li>
+          <li>Best buddy pair of the month recognised at end-of-month session</li>
+        </ul>
+        <div class="card-foot">🔄 New pairs assigned every Month Day 1</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 7: FUTURE WORKSHOPS ══ -->
+<div class="sec-head">
+  <span class="sec-num">07</span>
+  <span class="sec-icon">🎙️</span>
+  <span class="sec-title">Future Workshops</span>
+  <span class="sec-tag" style="background:rgba(255,157,77,.1);color:var(--work);border:1px solid rgba(255,157,77,.2);">Coming Soon</span>
+</div>
+<div class="sec-body">
+  <p style="font-size:14px;color:var(--muted);max-width:640px;margin-bottom:24px;line-height:1.8;">
+    Once the weekly rhythm and accountability systems are established and running smoothly —
+    <strong style="color:var(--text)">months 3 or 4 onward</strong> — we bring in the outside world.
+    The community needs to be strong enough to make the most of external guests.
+  </p>
+
+  <div class="grid-2">
+    <div class="card c-work">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🧑‍💻 Software Engineer Sessions</div>
+        <div class="card-desc">Real engineers from Egyptian tech companies — doing the exact job students want. Format: 20-minute talk, 20-minute student Q&amp;A.</div>
+        <ul class="card-list">
+          <li>Target companies: Instabug, Paymob, Breadfast, Swvl, Fawry, Vodafone Digital</li>
+          <li>Students prepare 2 real questions in advance — required</li>
+          <li>Speaker connected to students on LinkedIn after every session</li>
+          <li>Scheduled when community rhythm is established (Month 3+)</li>
+        </ul>
+        <div class="card-foot">🗓 Monthly from Month 3 &nbsp;·&nbsp; Wednesday evening</div>
+      </div>
+    </div>
+    <div class="card c-work">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">🧠 Soft Skills Workshops</div>
+        <div class="card-desc">Professional instructors covering the human side of engineering — communication, CV writing, interview skills, negotiation.</div>
+        <ul class="card-list">
+          <li>CV workshop: what Egyptian tech recruiters actually look for</li>
+          <li>Technical communication in English — writing and speaking</li>
+          <li>Interview simulation with professional feedback</li>
+          <li>All sessions Saturday afternoon — accessible for working students</li>
+        </ul>
+        <div class="card-foot">🗓 Monthly from Month 4 &nbsp;·&nbsp; Saturday afternoon</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote" style="border-left-color:var(--work);">
+    <p>"We don't invite guests before we're ready. A strong internal culture makes every external session ten times more valuable."</p>
+    <div class="attr">— 01Edu Cairo · Workshop Policy</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>🐹 <span class="hl">01Edu Cairo</span> · Programme Guide · 2025–2026</div>
+  <div>Built for engineers who cannot be replaced.</div>
+</footer>
+
+</div>
+</body>
+</html>

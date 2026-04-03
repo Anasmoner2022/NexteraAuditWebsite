@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Friday Presentations — 01Edu Cairo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080b; --surf:#0d0f14; --surf2:#121520; --surf3:#181c28;
+  --border:#1e2336; --border2:#282f45;
+  --text:#c2c8d8; --muted:#4e566e; --white:#eceef5;
+  --amber:#f5c842; --amber2:#ffe89a;
+  --teal:#4af0c4; --blue:#5ba3ff; --coral:#ff6b6b; --violet:#c87fff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.75;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1;}
+
+/* ── TOP BAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0 0;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.brand{color:var(--white);font-weight:700;font-size:11px;display:flex;align-items:center;gap:8px;}
+.brand em{color:var(--amber);font-style:normal;}
+.next-badge{background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);color:var(--amber);padding:4px 12px;border-radius:4px;font-size:10px;font-weight:700;}
+
+/* ── HERO ── */
+.hero{padding:52px 0 44px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-glow{position:absolute;top:-80px;right:-80px;width:500px;height:400px;background:radial-gradient(ellipse,rgba(245,200,66,.05) 0%,transparent 65%);pointer-events:none;}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--amber);}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(2.4rem,5.5vw,4rem);font-weight:400;line-height:1.06;color:var(--white);margin-bottom:16px;}
+h1 i{font-style:italic;color:var(--amber);}
+.hero-lead{font-size:14px;color:var(--muted);max-width:580px;line-height:1.85;margin-bottom:32px;}
+.hero-lead strong{color:var(--text);}
+
+/* rules strip */
+.rules-strip{display:flex;gap:8px;flex-wrap:wrap;}
+.rule-chip{background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px;}
+.rule-chip .rci{color:var(--amber);}
+
+/* ── SECTION LABEL ── */
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin:52px 0 20px;display:flex;align-items:center;gap:12px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── NEXT FRIDAY CARD ── */
+.next-card{
+  background:var(--surf);border:1px solid rgba(245,200,66,.25);
+  border-radius:14px;overflow:hidden;margin-bottom:16px;
+}
+.next-stripe{height:3px;background:linear-gradient(90deg,var(--amber),var(--amber2));}
+.next-body{padding:26px 30px;}
+.next-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px;}
+.next-date-block .nd-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--amber);margin-bottom:4px;}
+.next-date-block .nd-date{font-family:'Instrument Serif',serif;font-size:28px;color:var(--white);font-weight:400;line-height:1;}
+.next-date-block .nd-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px;}
+.countdown{text-align:right;}
+.countdown .cd-label{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;}
+.countdown .cd-val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--amber);}
+
+/* presenting teams */
+.presenting-teams{display:flex;flex-direction:column;gap:10px;}
+.pteam{
+  background:var(--surf2);border:1px solid var(--border);
+  border-radius:10px;padding:16px 20px;
+  display:grid;grid-template-columns:40px 1fr auto;
+  align-items:center;gap:14px;
+}
+.pteam.slot-1{border-left:3px solid var(--amber);}
+.pteam.slot-2{border-left:3px solid var(--blue);}
+.pteam.slot-3{border-left:3px solid var(--violet);}
+.slot-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--muted);}
+.slot-num .sn-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;}
+.slot-num .sn-time{font-size:11px;color:var(--text);}
+.pteam-info .pt-name{font-size:15px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.pteam-info .pt-members{font-size:12.5px;color:var(--muted);}
+.pteam-info .pt-members strong{color:var(--text);}
+.pteam-info .pt-topic{font-size:12px;color:var(--muted);margin-top:4px;font-style:italic;}
+.slot-status{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 9px;border-radius:3px;white-space:nowrap;}
+.status-up{background:rgba(245,200,66,.1);color:var(--amber);border:1px solid rgba(245,200,66,.2);}
+.status-confirmed{background:rgba(74,240,196,.1);color:var(--teal);border:1px solid rgba(74,240,196,.2);}
+
+/* ── FORMAT REMINDER ── */
+.format-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:8px;}
+.fmt-card{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.fmt-icon{font-size:18px;margin-bottom:8px;}
+.fmt-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.fmt-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+
+/* ── PAST SESSIONS ── */
+.past-list{display:flex;flex-direction:column;gap:10px;}
+.past-item{
+  background:var(--surf);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;transition:border-color .2s;
+}
+.past-item:hover{border-color:var(--border2);}
+.past-header{
+  padding:14px 20px;cursor:pointer;
+  display:grid;grid-template-columns:130px 1fr auto;
+  align-items:center;gap:16px;user-select:none;
+}
+.ph-date{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);}
+.ph-teams{font-size:13.5px;color:var(--text);font-weight:500;}
+.ph-toggle{font-size:11px;color:var(--muted);transition:transform .2s;}
+.past-item.open .ph-toggle{transform:rotate(90deg);}
+.past-body{display:none;padding:0 20px 16px;border-top:1px solid var(--border);}
+.past-item.open .past-body{display:block;}
+.past-teams{display:flex;flex-direction:column;gap:8px;padding-top:14px;}
+.past-team{background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:11px 14px;display:flex;align-items:center;gap:12px;}
+.pt-order{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);min-width:20px;}
+.pt-info .pti-name{font-size:13.5px;font-weight:600;color:var(--white);}
+.pt-info .pti-members{font-size:12px;color:var(--muted);}
+.pt-note{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);font-style:italic;text-align:right;max-width:180px;line-height:1.4;}
+.winner-note{color:var(--amber);}
+
+/* search */
+.search-wrap{position:relative;margin-bottom:20px;}
+.search-wrap input{width:100%;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:12px 16px 12px 42px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--white);outline:none;transition:border-color .2s;}
+.search-wrap input::placeholder{color:var(--muted);}
+.search-wrap input:focus{border-color:rgba(245,200,66,.3);}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);margin-top:64px;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);}
+footer .hl{color:var(--amber);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">🐹 <em>01Edu</em> Cairo · Friday Presentations</div>
+  <div class="next-badge" id="next-badge">Loading...</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">Every Other Friday · 5:00 PM · On-campus</div>
+  <h1>Who presents<br><i>this Friday?</i></h1>
+  <p class="hero-lead">
+    The instructor selects teams — you don't volunteer.
+    <strong>Demo first, explain second.</strong>
+    Every student in the audience must ask at least one technical question.
+  </p>
+  <div class="rules-strip">
+    <div class="rule-chip"><span class="rci">⏱</span> 10 min demo + 10 min Q&amp;A</div>
+    <div class="rule-chip"><span class="rci">👥</span> Both members must speak</div>
+    <div class="rule-chip"><span class="rci">💻</span> Demo first — no slides needed</div>
+    <div class="rule-chip"><span class="rci">❓</span> Audience must ask technical questions</div>
+  </div>
+</section>
+
+<!-- NEXT FRIDAY -->
+<div class="sec-label">Next Presentation Friday</div>
+<div class="next-card">
+  <div class="next-stripe"></div>
+  <div class="next-body">
+    <div class="next-header">
+      <div class="next-date-block">
+        <div class="nd-label">📅 Next session</div>
+        <div class="nd-date" id="next-date">Loading...</div>
+        <div class="nd-time">5:00 PM → 6:30 PM · On-campus</div>
+      </div>
+      <div class="countdown">
+        <div class="cd-label">Days away</div>
+        <div class="cd-val" id="countdown">—</div>
+      </div>
+    </div>
+
+    <div class="presenting-teams" id="next-teams">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- FORMAT REMINDER -->
+<div class="sec-label">Session Format</div>
+<div class="format-grid">
+  <div class="fmt-card">
+    <div class="fmt-icon">🚀</div>
+    <div class="fmt-title">Demo first</div>
+    <div class="fmt-desc">Open your terminal and show it working before you say a single word about how it works.</div>
+  </div>
+  <div class="fmt-card">
+    <div class="fmt-icon">🗣️</div>
+    <div class="fmt-title">Both members speak</div>
+    <div class="fmt-desc">If only one person explains the project, the team gets no instructor feedback.</div>
+  </div>
+  <div class="fmt-card">
+    <div class="fmt-icon">❓</div>
+    <div class="fmt-title">Audience questions</div>
+    <div class="fmt-desc">Every student must ask at least one technical question. "Nice job" is not a question.</div>
+  </div>
+  <div class="fmt-card">
+    <div class="fmt-icon">📝</div>
+    <div class="fmt-title">Written feedback</div>
+    <div class="fmt-desc">Instructor sends written feedback to presenting teams the same day — not just a score.</div>
+  </div>
+</div>
+
+<!-- SEARCH PAST -->
+<div class="sec-label">Past Sessions</div>
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input type="text" id="search" placeholder="Search a student name across all sessions..." oninput="filterPast()" autocomplete="off"/>
+</div>
+<div class="past-list" id="past-list">
+  <!-- injected by JS -->
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>🐹 <span class="hl">01Edu Cairo</span> · Friday Presentations Schedule</div>
+  <div><a href="index.html" style="color:var(--muted);text-decoration:none;">← Back to Student Hub</a></div>
+</footer>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  ✏️  INSTRUCTOR: EDIT THIS SECTION EACH WEEK
+// ════════════════════════════════════════════════════════════
+
+const CONFIG = {
+  // Next presentation Friday
+  // Format: "YYYY-MM-DD"
+  nextFriday: "2026-04-24",
+
+  // Teams presenting this Friday
+  // slots run in order: slot 1 first, slot 2 second, slot 3 third
+  // topic: what their project is about (one short line)
+  // status: "confirmed" | "upcoming"
+  nextTeams: [
+    {
+      slot: "1",
+      time: "5:00 PM",
+      name: "Team Giza",
+      members: ["Ahmed Hassan", "Mohamed Ali", "Sara Ibrahim"],
+      topic: "CLI Word Frequency Analyzer",
+      status: "confirmed",
+    },
+    {
+      slot: "2",
+      time: "5:25 PM",
+      name: "Team Nile",
+      members: ["Youssef Khalil", "Omar Fathy", "Nour El-Din"],
+      topic: "File Duplicate Finder",
+      status: "confirmed",
+    },
+    {
+      slot: "3",
+      time: "5:50 PM",
+      name: "Team Sphinx",
+      members: ["Rana Mostafa", "Karim Adel", "Tarek Samir"],
+      topic: "Terminal Calculator with Brackets",
+      status: "upcoming",
+    },
+  ],
+
+  // Past sessions — newest first
+  // note: optional instructor comment shown in the past session
+  // winner: true marks the team that won the competition that month
+  pastSessions: [
+    {
+      date: "Fri 10 Apr 2026",
+      teams: [
+        {
+          name: "Team Cairo",
+          members: ["Mona Ragab", "Layla Ashraf", "Amr Gamal"],
+          topic: "Contacts CLI — CSV sort and search",
+          note: "Clean demo. Q&A was strong — Amr explained the sort algorithm clearly.",
+        },
+        {
+          name: "Team Luxor",
+          members: ["Hassan Mahmoud", "Dina Nasser"],
+          topic: "Student grade dashboard",
+          note: "Good structure. Hassan needs to explain more — let Dina carry too much.",
+        },
+      ],
+    },
+    {
+      date: "Fri 27 Mar 2026",
+      teams: [
+        {
+          name: "Team Sinai",
+          members: ["Ibrahim Sayed", "Mahmoud Yousry", "Nada Sherif"],
+          topic: "Stack-based expression evaluator",
+          note: "Best demo of the month — showed 5 different inputs live.",
+          winner: true,
+        },
+        {
+          name: "Team Alexandria",
+          members: ["Salma Wael", "Tarek Samir"],
+          topic: "Palindrome checker with two-pointer",
+          note: "Correct solution. Audience asked good questions about edge cases.",
+        },
+      ],
+    },
+    {
+      date: "Fri 13 Mar 2026",
+      teams: [
+        {
+          name: "Team Delta",
+          members: ["Ahmed Hassan", "Nour El-Din"],
+          topic: "Two-Sum with O(n) hash map",
+          note: "First presentation session of the cohort. Everyone nervous but did well.",
+        },
+        {
+          name: "Team Karnak",
+          members: ["Sara Ibrahim", "Karim Adel", "Dina Nasser"],
+          topic: "Roman numeral decoder",
+          note: "Sara explained the map logic perfectly. Good pace.",
+        },
+      ],
+    },
+  ],
+};
+
+// ════════════════════════════════════════════════════════════
+//  DO NOT EDIT BELOW THIS LINE
+// ════════════════════════════════════════════════════════════
+
+// Format date nicely
+function fmtDate(iso) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+}
+
+// Countdown
+function calcCountdown(iso) {
+  const target = new Date(iso + "T17:00:00");
+  const now    = new Date();
+  const diff   = target - now;
+  if (diff <= 0) return "Today";
+  const days   = Math.floor(diff / 86400000);
+  if (days === 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  return `${days} days`;
+}
+
+// Inject top badge and date
+document.getElementById("next-badge").textContent = fmtDate(CONFIG.nextFriday);
+document.getElementById("next-date").textContent  = fmtDate(CONFIG.nextFriday);
+document.getElementById("countdown").textContent  = calcCountdown(CONFIG.nextFriday);
+document.title = `Presentations — ${fmtDate(CONFIG.nextFriday)} — 01Edu Cairo`;
+
+// Render next teams
+const slotClasses = ["slot-1", "slot-2", "slot-3"];
+document.getElementById("next-teams").innerHTML = CONFIG.nextTeams.map((t, i) => `
+  <div class="pteam ${slotClasses[i] || ''}">
+    <div class="slot-num">
+      <div class="sn-label">Slot ${t.slot}</div>
+      <div class="sn-time">${t.time}</div>
+    </div>
+    <div class="pteam-info">
+      <div class="pt-name">${t.name}</div>
+      <div class="pt-members">${t.members.map((m, mi) => `<strong>${m}</strong>`).join(" &nbsp;·&nbsp; ")}</div>
+      <div class="pt-topic">📌 ${t.topic}</div>
+    </div>
+    <div class="slot-status ${t.status === 'confirmed' ? 'status-confirmed' : 'status-up'}">
+      ${t.status === 'confirmed' ? '✓ Confirmed' : 'Upcoming'}
+    </div>
+  </div>
+`).join("");
+
+// Render past sessions
+function renderPast(sessions) {
+  const list = document.getElementById("past-list");
+  if (!sessions.length) {
+    list.innerHTML = `<div style="padding:32px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;">No sessions match your search.</div>`;
+    return;
+  }
+  list.innerHTML = sessions.map((session, si) => {
+    const teamNames = session.teams.map(t => t.name).join(" &nbsp;·&nbsp; ");
+    return `
+    <div class="past-item" id="past-${si}">
+      <div class="past-header" onclick="togglePast(${si})">
+        <div class="ph-date">${session.date}</div>
+        <div class="ph-teams">${teamNames}</div>
+        <div class="ph-toggle">▶</div>
+      </div>
+      <div class="past-body">
+        <div class="past-teams">
+          ${session.teams.map((t, ti) => `
+            <div class="past-team">
+              <div class="pt-order">${ti + 1}</div>
+              <div class="pt-info">
+                <div class="pti-name">${t.name} ${t.winner ? '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;background:rgba(245,200,66,.1);color:#f5c842;border:1px solid rgba(245,200,66,.2);padding:2px 6px;border-radius:3px;margin-left:6px;">🏆 Winner</span>' : ''}</div>
+                <div class="pti-members">${t.members.join(" · ")} &nbsp;—&nbsp; <em>${t.topic}</em></div>
+              </div>
+              ${t.note ? `<div class="pt-note ${t.winner ? 'winner-note' : ''}">${t.note}</div>` : ''}
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function togglePast(i) {
+  const el = document.getElementById(`past-${i}`);
+  el.classList.toggle("open");
+}
+
+function filterPast() {
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  if (!q) { renderPast(CONFIG.pastSessions); return; }
+  const filtered = CONFIG.pastSessions.filter(s =>
+    s.teams.some(t =>
+      t.name.toLowerCase().includes(q) ||
+      t.members.some(m => m.toLowerCase().includes(q)) ||
+      (t.topic && t.topic.toLowerCase().includes(q))
+    )
+  );
+  renderPast(filtered);
+}
+
+renderPast(CONFIG.pastSessions);
+</script>
+</body>
+</html>
